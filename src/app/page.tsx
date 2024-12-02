@@ -26,6 +26,7 @@ function App() {
 
   const buildPath = (params: FormData): string => {
     const filteredParams = Object.fromEntries(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       Object.entries(params).filter(([_, value]) => value !== "")
     );
 
