@@ -14,8 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Search Flights",
-  description: "Search connecting flights for Ryanair",
+  title: "Find Flights",
+  description: "Find connecting flights for Ryanair",
 };
 
 export default function RootLayout({
