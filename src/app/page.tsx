@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-const BASE_URL = "https://services-api.ryanair.com/timtbl/v3/journeys";
+const BASE_URL_JOURNEYS = "https://services-api.ryanair.com/timtbl/v3/journeys";
 
 interface FormData {
   departureDateFrom: string;
@@ -41,7 +41,7 @@ function App() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const path = buildPath(formData);
-    const requestURL = `${BASE_URL}/${path}`;
+    const requestURL = `${BASE_URL_JOURNEYS}/${path}`;
 
     try {
       const response = await fetch(requestURL, { method: "GET" });
@@ -56,13 +56,13 @@ function App() {
   };
 
   return (
-    <div class="max-w-lg mx-auto mt-10 p-6 bg-gray-100 shadow-md rounded-lg">
-      <h1 class="text-2xl font-bold text-gray-800 mb-6">Search Flights</h1>
-      <form onSubmit={handleSubmit} class="space-y-4">
+    <div className="max-w-lg mx-auto mt-10 p-6 bg-gray-100 shadow-md rounded-lg">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Search Flights</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label
             htmlFor="departureDateFrom"
-            class="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-700 mb-1"
           >
             Departure Date From:
           </label>
@@ -73,14 +73,14 @@ function App() {
             value={formData.departureDateFrom}
             onChange={handleChange}
             required
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
           />
         </div>
 
         <div>
           <label
             htmlFor="departureDateTo"
-            class="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-700 mb-1"
           >
             Departure Date To:
           </label>
@@ -91,14 +91,14 @@ function App() {
             value={formData.departureDateTo}
             onChange={handleChange}
             required
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
           />
         </div>
 
         <div>
           <label
             htmlFor="origin"
-            class="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-700 mb-1"
           >
             Origin:
           </label>
@@ -109,14 +109,14 @@ function App() {
             value={formData.origin}
             onChange={handleChange}
             required
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
           />
         </div>
 
         <div>
           <label
             htmlFor="destination"
-            class="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-700 mb-1"
           >
             Destination:
           </label>
@@ -127,14 +127,14 @@ function App() {
             value={formData.destination}
             onChange={handleChange}
             required
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
           />
         </div>
 
         <div>
           <button
             type="submit"
-            class="w-full bg-gray-700 text-white font-medium py-2 px-4 rounded-lg shadow-md hover:bg-gray-800 focus:ring-2 focus:ring-gray-500"
+            className="w-full bg-gray-700 text-white font-medium py-2 px-4 rounded-lg shadow-md hover:bg-gray-800 focus:ring-2 focus:ring-gray-500"
           >
             Submit
           </button>
