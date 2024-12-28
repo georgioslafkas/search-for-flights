@@ -56,62 +56,89 @@ function App() {
   };
 
   return (
-    <div>
-      <h1>Search flights</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="departureDateFrom">Departure Date From:</label>
-        <br />
-        <input
-          type="date"
-          id="departureDateFrom"
-          name="departureDateFrom"
-          value={formData.departureDateFrom}
-          onChange={handleChange}
-          required
-        />
-        <br />
-        <br />
+    <div class="max-w-lg mx-auto mt-10 p-6 bg-gray-100 shadow-md rounded-lg">
+      <h1 class="text-2xl font-bold text-gray-800 mb-6">Search Flights</h1>
+      <form onSubmit={handleSubmit} class="space-y-4">
+        <div>
+          <label
+            htmlFor="departureDateFrom"
+            class="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Departure Date From:
+          </label>
+          <input
+            type="date"
+            id="departureDateFrom"
+            name="departureDateFrom"
+            value={formData.departureDateFrom}
+            onChange={handleChange}
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+          />
+        </div>
 
-        <label htmlFor="departureDateTo">Departure Date To:</label>
-        <br />
-        <input
-          type="date"
-          id="departureDateTo"
-          name="departureDateTo"
-          value={formData.departureDateTo}
-          onChange={handleChange}
-          required
-        />
-        <br />
-        <br />
+        <div>
+          <label
+            htmlFor="departureDateTo"
+            class="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Departure Date To:
+          </label>
+          <input
+            type="date"
+            id="departureDateTo"
+            name="departureDateTo"
+            value={formData.departureDateTo}
+            onChange={handleChange}
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+          />
+        </div>
 
-        <label htmlFor="origin">Origin:</label>
-        <br />
-        <input
-          type="text"
-          id="origin"
-          name="origin"
-          value={formData.origin}
-          onChange={handleChange}
-          required
-        />
-        <br />
-        <br />
+        <div>
+          <label
+            htmlFor="origin"
+            class="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Origin:
+          </label>
+          <input
+            type="text"
+            id="origin"
+            name="origin"
+            value={formData.origin}
+            onChange={handleChange}
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+          />
+        </div>
 
-        <label htmlFor="destination">Destination:</label>
-        <br />
-        <input
-          type="text"
-          id="destination"
-          name="destination"
-          value={formData.destination}
-          onChange={handleChange}
-          required
-        />
-        <br />
-        <br />
+        <div>
+          <label
+            htmlFor="destination"
+            class="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Destination:
+          </label>
+          <input
+            type="text"
+            id="destination"
+            name="destination"
+            value={formData.destination}
+            onChange={handleChange}
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+          />
+        </div>
 
-        <button type="submit">Submit</button>
+        <div>
+          <button
+            type="submit"
+            class="w-full bg-gray-700 text-white font-medium py-2 px-4 rounded-lg shadow-md hover:bg-gray-800 focus:ring-2 focus:ring-gray-500"
+          >
+            Submit
+          </button>
+        </div>
       </form>
     </div>
   );
