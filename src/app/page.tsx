@@ -21,6 +21,7 @@ function App() {
     origin: "",
     destination: "",
   });
+  const [journeys, setJourneys] = useState([]);
 
   useEffect(() => {
     async function fetchAirports() {
@@ -65,8 +66,7 @@ function App() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data = await response.json();
-      console.log("Response Data:", data);
+      setJourneys(await response.json());
     } catch (error) {
       console.error("Error:", error);
     }
@@ -175,6 +175,48 @@ function App() {
           </button>
         </div>
       </form>
+      <ul className="list-disc pl-5 space-y-4">
+        {journeys.map((journey) => (
+          <React.Fragment key={journey.departureDateTime}>
+            <li>
+              <p>
+                <strong>Duration:</strong>
+                {journey.duration}
+              </p>
+              <p>
+                <strong>Departure:</strong>
+                {new Date(journey.departureDateTime).toLocaleString()}
+              </p>
+              <p>
+                <strong>Arrival:</strong>
+                {new Date(journey.arrivalDateTime).toLocaleString()}
+              </p>
+              <ul className="pl-5">
+                {journey.flights.map((leg, index) => (
+                  <li key={index}>
+                    <p>
+                      <strong>From:</strong>
+                      {leg.departureAirportCode}
+                    </p>
+                    <p>
+                      <strong>To:</strong>
+                      {leg.arrivalAirportCode}
+                    </p>
+                    <p>
+                      <strong>Departure:</strong>
+                      {new Date(leg.departureDateTime).toLocaleString()}
+                    </p>
+                    <p>
+                      <strong>Arrival:</strong>
+                      {new Date(leg.arrivalDateTime).toLocaleString()}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          </React.Fragment>
+        ))}
+      </ul>
     </div>
   );
 }
