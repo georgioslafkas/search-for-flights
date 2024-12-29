@@ -175,46 +175,43 @@ function App() {
           </button>
         </div>
       </form>
-      <ul className="list-disc pl-5 space-y-4">
-        {journeys.map((journey) => (
-          <React.Fragment key={journey.departureDateTime}>
-            <li>
+      <ul className="space-y-4">
+        {journeys.map((journey, index) => (
+          <li key={index} className="p-4 border rounded-lg shadow-sm">
+            <div className="mb-2 font-medium">
               <p>
-                <strong>Duration:</strong>
+                Flights: {journey.flights.length} Total Duration:{" "}
                 {journey.duration}
               </p>
               <p>
-                <strong>Departure:</strong>
+                Departure:{" "}
                 {new Date(journey.departureDateTime).toLocaleString()}
               </p>
               <p>
-                <strong>Arrival:</strong>
-                {new Date(journey.arrivalDateTime).toLocaleString()}
+                Arrival: {new Date(journey.arrivalDateTime).toLocaleString()}
               </p>
-              <ul className="pl-5">
-                {journey.flights.map((leg, index) => (
-                  <li key={index}>
-                    <p>
-                      <strong>From:</strong>
-                      {leg.departureAirportCode}
-                    </p>
-                    <p>
-                      <strong>To:</strong>
-                      {leg.arrivalAirportCode}
-                    </p>
-                    <p>
-                      <strong>Departure:</strong>
-                      {new Date(leg.departureDateTime).toLocaleString()}
-                    </p>
-                    <p>
-                      <strong>Arrival:</strong>
-                      {new Date(leg.arrivalDateTime).toLocaleString()}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          </React.Fragment>
+            </div>
+            <ul className="space-y-2">
+              {journey.flights.map((leg, legIndex) => (
+                <li key={legIndex} className="pl-4">
+                  <p>
+                    <strong>Flight {legIndex + 1}:</strong>
+                  </p>
+                  <p>
+                    Origin: {leg.departureAirportCode},{" "}
+                    {new Date(leg.departureDateTime).toLocaleString()}
+                  </p>
+                  <p>
+                    Destination: {leg.arrivalAirportCode},{" "}
+                    {new Date(leg.arrivalDateTime).toLocaleString()}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <button className="mt-4 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800">
+              Get Prices
+            </button>
+          </li>
         ))}
       </ul>
     </div>
