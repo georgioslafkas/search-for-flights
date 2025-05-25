@@ -3,35 +3,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
-const URL_AIRPORTS =
-  "https://services-api.ryanair.com/views/locate/5/airports/en/active";
-const URL_JOURNEYS = "https://services-api.ryanair.com/timtbl/v3/journeys";
-// const URL_AVAILABILITY =
-//   "https://www.ryanair.com/api/booking/v4/en-ie/availability";
-
-const AVAILABILITY_PARAMS = {
-  ADT: 1,
-  ToUs: "AGREED",
-  FlexDaysBeforeIn: 2,
-  FlexDaysBeforeOut: 2,
-  FlexDaysIn: 2,
-  FlexDaysOut: 2,
-};
-
-/**
- * https://www.ryanair.com/api/booking/v4/en-ie/availability?ADT=1&TEEN=0&CHD=0&INF=0&Origin=SKG&Destination=KRK&promoCode=&IncludeConnectingFlights=false&DateOut=2025-01-28&DateIn=&FlexDaysBeforeOut=2&FlexDaysOut=2&FlexDaysBeforeIn=2&FlexDaysIn=2&RoundTrip=false&ToUs=AGREED
- *
- * Slimmed
- * https://www.ryanair.com/api/booking/v4/en-ie/availability?ADT=1&Origin=SKG&Destination=KRK&DateOut=2025-01-28&FlexDaysBeforeOut=2&FlexDaysOut=2&FlexDaysBeforeIn=2&FlexDaysIn=2&ToUs=AGREED
- */
-
-interface FormData {
-  departureDateFrom: string;
-  departureDateTo: string;
-  origin: string;
-  destination: string;
-}
+import { AVAILABILITY_PARAMS, FormData } from "./types";
+import { URL_AIRPORTS, URL_JOURNEYS } from "./endpoints";
 
 function App() {
   const [airports, setAirports] = useState();
@@ -88,8 +61,12 @@ function App() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      setJourneys(await response.json());
+      const data = await response.json();
+      console.log("Response Data:", data);
+      const responseJourneys = data.map(({ flights }) => flights);
+      setJourneys(responseJourneys);
     } catch (error) {
+      setJourneys([]);
       console.error("Error:", error);
     }
   };
@@ -105,15 +82,36 @@ function App() {
 
   const handleGetPriceSubmit = (flights: any[]) => {
     const availabilityStandardParams = createQueryString(AVAILABILITY_PARAMS);
-    const requestURLs = flights.map((flight) => {
+    const requestURLs = flights?.map((flight) => {
       const dateOut = new Date(flight.departureDateTime)
         .toISOString()
         .split("T")[0];
       return `/api/proxy?${availabilityStandardParams}&Origin=${flight.departureAirportCode}&Destination=${flight.arrivalAirportCode}&dateOut=${dateOut}`;
     });
 
-    fetch(requestURLs[0], { method: "GET" });
+    fetch(requestURLs?.[0], { method: "GET" });
   };
+  const [fares, setFares] = useState([]);
+
+  useEffect(() => {
+    const getFares = async () => {
+      const URL = `https://www.ryanair.com/api/farfnd/v4/oneWayFares/${formData.origin}/${formData.destination}/cheapestPerDay?outboundMonthOfDate=${formData.departureDateFrom}&currency=EUR`;
+      const res = await fetch(URL, {
+        method: "GET",
+      });
+
+      const resJson = await res.json();
+      setFares(resJson.outbound.fares.filter((fare) => fare?.price?.value));
+    };
+    if (journeys.length) {
+      getFares();
+    }
+  }, [
+    journeys.length,
+    formData.departureDateFrom,
+    formData.destination,
+    formData.origin,
+  ]);
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-gray-100 shadow-md rounded-lg">
@@ -217,14 +215,19 @@ function App() {
             Find
           </button>
         </div>
+
+        <ul>
+          {fares.map((fare, index) => (
+            <li key={index}>{fare.price?.value}</li>
+          ))}
+        </ul>
       </form>
       <ul className="space-y-4">
         {journeys.map((journey: any, index) => (
           <li key={index} className="p-4 border rounded-lg shadow-sm">
             <div className="mb-2 font-medium">
               <p>
-                Flights: {journey.flights.length} Total Duration:{" "}
-                {journey.duration}
+                Flights: {journey.length} Total Duration: {journey.duration}
               </p>
               <p>
                 Departure:{" "}
@@ -235,7 +238,7 @@ function App() {
               </p>
             </div>
             <ul className="space-y-2">
-              {journey.flights.map((leg: any, legIndex: number) => (
+              {journey.map((leg: any, legIndex: number) => (
                 <li key={legIndex} className="pl-4">
                   <p>
                     <strong>Flight {legIndex + 1}:</strong>
@@ -253,7 +256,9 @@ function App() {
             </ul>
             <button
               className="mt-4 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800"
-              onClick={() => handleGetPriceSubmit(journey.flights)}
+              onClick={() => {
+                handleGetPriceSubmit(journey);
+              }}
             >
               Get Prices
             </button>
