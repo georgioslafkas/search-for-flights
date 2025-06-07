@@ -3,8 +3,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { AVAILABILITY_PARAMS, FormData } from "./types";
-import { URL_AIRPORTS, URL_JOURNEYS } from "./endpoints";
+import { FormData } from "./types";
+import endpoints from "./endpoints";
 
 function App() {
   const [airports, setAirports] = useState();
@@ -18,7 +18,7 @@ function App() {
 
   useEffect(() => {
     async function fetchAirports() {
-      const res = await fetch(URL_AIRPORTS, { method: "GET" });
+      const res = await fetch(endpoints.URL_AIRPORTS, { method: "GET" });
       const airports = await res.json();
       setAirports(airports);
     }
@@ -54,7 +54,7 @@ function App() {
   ) => {
     e.preventDefault();
     const path = buildPath(formData);
-    const requestURL = `${URL_JOURNEYS}/${path}`;
+    const requestURL = `${endpoints.URL_JOURNEYS}/${path}`;
 
     try {
       const response = await fetch(requestURL, { method: "GET" });
@@ -71,47 +71,18 @@ function App() {
     }
   };
 
-  const createQueryString = (params: Record<string, string | number>) => {
-    return Object.entries(params)
-      .map(
-        ([key, value]) =>
-          `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
-      )
-      .join("&");
-  };
-
   const handleGetPriceSubmit = (flights: any[]) => {
-    const availabilityStandardParams = createQueryString(AVAILABILITY_PARAMS);
     const requestURLs = flights?.map((flight) => {
       const dateOut = new Date(flight.departureDateTime)
         .toISOString()
         .split("T")[0];
-      return `/api/proxy?${availabilityStandardParams}&Origin=${flight.departureAirportCode}&Destination=${flight.arrivalAirportCode}&dateOut=${dateOut}`;
+
+      return `${endpoints.FARE_API}/oneWayFares/${flight.departureAirportCode}/${flight.arrivalAirportCode}/cheapestPerDay?outboundMonthOfDate=${dateOut}&currency=SEK`;
     });
 
+    console.log(requestURLs);
     fetch(requestURLs?.[0], { method: "GET" });
   };
-  const [fares, setFares] = useState([]);
-
-  useEffect(() => {
-    const getFares = async () => {
-      const URL = `https://www.ryanair.com/api/farfnd/v4/oneWayFares/${formData.origin}/${formData.destination}/cheapestPerDay?outboundMonthOfDate=${formData.departureDateFrom}&currency=EUR`;
-      const res = await fetch(URL, {
-        method: "GET",
-      });
-
-      const resJson = await res.json();
-      setFares(resJson.outbound.fares.filter((fare) => fare?.price?.value));
-    };
-    if (journeys.length) {
-      getFares();
-    }
-  }, [
-    journeys.length,
-    formData.departureDateFrom,
-    formData.destination,
-    formData.origin,
-  ]);
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-gray-100 shadow-md rounded-lg">
@@ -215,12 +186,6 @@ function App() {
             Find
           </button>
         </div>
-
-        <ul>
-          {fares.map((fare, index) => (
-            <li key={index}>{fare.price?.value}</li>
-          ))}
-        </ul>
       </form>
       <ul className="space-y-4">
         {journeys.map((journey: any, index) => (
