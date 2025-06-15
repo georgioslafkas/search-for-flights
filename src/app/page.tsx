@@ -15,6 +15,7 @@ function App() {
     destination: "",
   });
   const [journeys, setJourneys] = useState([]);
+  const [price, setPrice] = useState(0);
 
   useEffect(() => {
     async function fetchAirports() {
@@ -71,7 +72,7 @@ function App() {
     }
   };
 
-  const handleGetPriceSubmit = (flights: any[]) => {
+  const handleGetPriceSubmit = async (flights: any[]) => {
     const requestURLs = flights?.map((flight) => {
       const dateOut = new Date(flight.departureDateTime)
         .toISOString()
@@ -80,8 +81,25 @@ function App() {
       return `${endpoints.FARE_API}/oneWayFares/${flight.departureAirportCode}/${flight.arrivalAirportCode}/cheapestPerDay?outboundMonthOfDate=${dateOut}&currency=SEK`;
     });
 
-    console.log(requestURLs);
-    fetch(requestURLs?.[0], { method: "GET" });
+    const responses = await Promise.all(
+      requestURLs.map((url) => fetch(url, { method: "GET" }))
+    );
+    const fares = await Promise.all(
+      responses.map(async (res) => {
+        return res.json();
+      })
+    );
+
+    const price = flights.reduce((finalPrice, currentFlight, flightIndex) => {
+      const faresForFlight = fares[flightIndex].outbound.fares;
+      const date = flights[flightIndex].departureDateTime.split("T")[0];
+      return (
+        finalPrice +
+        faresForFlight.find((fare) => fare.day === date).price.value
+      );
+    }, 0);
+
+    setPrice(price);
   };
 
   return (
@@ -225,8 +243,9 @@ function App() {
                 handleGetPriceSubmit(journey);
               }}
             >
-              Get Prices
+              Get Price
             </button>
+            {price && <span>{price}</span>}
           </li>
         ))}
       </ul>
