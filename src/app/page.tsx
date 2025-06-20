@@ -26,14 +26,6 @@ function App() {
     }`;
 
   useEffect(() => {
-    const newMap = new Map();
-    journeys.forEach((journey) => {
-      newMap.set(getJourneyId(journey), 0);
-    });
-    setJourneyPriceMap(newMap);
-  }, [journeys]);
-
-  useEffect(() => {
     async function fetchAirports() {
       const res = await fetch(endpoints.URL_AIRPORTS, { method: "GET" });
       const airports = await res.json();
@@ -81,6 +73,11 @@ function App() {
       const data = await response.json();
       const responseJourneys = data.map(({ flights }) => flights);
       setJourneys(responseJourneys);
+      const newMap = new Map();
+      journeys.forEach((journey) => {
+        newMap.set(getJourneyId(journey), 0);
+      });
+      setJourneyPriceMap(newMap);
     } catch (error) {
       setJourneys([]);
       console.error("Error:", error);
@@ -263,7 +260,9 @@ function App() {
               Get Price
             </button>
             {journeyPriceMap.get(getJourneyId(journey))
-              ? `${journeyPriceMap.get(getJourneyId(journey))} ${currency}`
+              ? `${journeyPriceMap
+                  .get(getJourneyId(journey))
+                  .toFixed(2)} ${currency}`
               : undefined}
           </li>
         ))}
