@@ -15,7 +15,22 @@ function App() {
     destination: "",
   });
   const [journeys, setJourneys] = useState([]);
-  const [price, setPrice] = useState(0);
+  const [journeyPriceMap, setJourneyPriceMap] = useState(new Map());
+
+  const getJourneyId = (journey) =>
+    `${journey[0].departureAirportCode}_${
+      journey[journey.length - 1].arrivalAirportCode
+    }_${journey[0].departureDateTime}_${
+      journey[journey.length - 1].arrivalDateTime
+    }`;
+
+  useEffect(() => {
+    const newMap = new Map();
+    journeys.forEach((journey) => {
+      newMap.set(getJourneyId(journey), 0);
+    });
+    setJourneyPriceMap(newMap);
+  }, [journeys]);
 
   useEffect(() => {
     async function fetchAirports() {
@@ -63,7 +78,6 @@ function App() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log("Response Data:", data);
       const responseJourneys = data.map(({ flights }) => flights);
       setJourneys(responseJourneys);
     } catch (error) {
@@ -90,7 +104,7 @@ function App() {
       })
     );
 
-    const price = flights.reduce((finalPrice, currentFlight, flightIndex) => {
+    const price = flights.reduce((finalPrice, _, flightIndex) => {
       const faresForFlight = fares[flightIndex].outbound.fares;
       const date = flights[flightIndex].departureDateTime.split("T")[0];
       return (
@@ -99,7 +113,9 @@ function App() {
       );
     }, 0);
 
-    setPrice(price);
+    const newMap = new Map(journeyPriceMap);
+    newMap.set(getJourneyId(flights), price);
+    setJourneyPriceMap(newMap);
   };
 
   return (
@@ -245,7 +261,7 @@ function App() {
             >
               Get Price
             </button>
-            {price && <span>{price}</span>}
+            {journeyPriceMap.get(getJourneyId(journey))}
           </li>
         ))}
       </ul>
