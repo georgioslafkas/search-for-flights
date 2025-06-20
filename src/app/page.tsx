@@ -3,7 +3,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { FormData } from "./types";
+import { FormData, CURRENCIES } from "./types";
 import endpoints from "./endpoints";
 
 function App() {
@@ -16,6 +16,7 @@ function App() {
   });
   const [journeys, setJourneys] = useState([]);
   const [journeyPriceMap, setJourneyPriceMap] = useState(new Map());
+  const currency = CURRENCIES.SEK;
 
   const getJourneyId = (journey) =>
     `${journey[0].departureAirportCode}_${
@@ -92,7 +93,7 @@ function App() {
         .toISOString()
         .split("T")[0];
 
-      return `${endpoints.FARE_API}/oneWayFares/${flight.departureAirportCode}/${flight.arrivalAirportCode}/cheapestPerDay?outboundMonthOfDate=${dateOut}&currency=SEK`;
+      return `${endpoints.FARE_API}/oneWayFares/${flight.departureAirportCode}/${flight.arrivalAirportCode}/cheapestPerDay?outboundMonthOfDate=${dateOut}&currency=${currency}`;
     });
 
     const responses = await Promise.all(
@@ -261,7 +262,9 @@ function App() {
             >
               Get Price
             </button>
-            {journeyPriceMap.get(getJourneyId(journey))}
+            {journeyPriceMap.get(getJourneyId(journey))
+              ? `${journeyPriceMap.get(getJourneyId(journey))} ${currency}`
+              : undefined}
           </li>
         ))}
       </ul>

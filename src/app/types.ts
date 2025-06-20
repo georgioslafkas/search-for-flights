@@ -13,3 +13,8 @@ export const AVAILABILITY_PARAMS = {
   FlexDaysIn: 2,
   FlexDaysOut: 2,
 } as const;
+
+export const CURRENCIES = {
+  SEK: "SEK",
+  EUR: "EUR",
+} as const;
