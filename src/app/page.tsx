@@ -5,6 +5,7 @@
 import React, { useEffect, useState } from "react";
 import { FormData, CURRENCIES } from "./types";
 import endpoints from "./endpoints";
+import { getJourneyDuration } from "./utils";
 
 function App() {
   const [airports, setAirports] = useState();
@@ -116,6 +117,8 @@ function App() {
     setJourneyPriceMap(newMap);
   };
 
+  console.log(journeys);
+
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-gray-100 shadow-md rounded-lg">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Find Flights</h1>
@@ -224,14 +227,21 @@ function App() {
           <li key={index} className="p-4 border rounded-lg shadow-sm">
             <div className="mb-2 font-medium">
               <p>
-                Flights: {journey.length} Total Duration: {journey.duration}
+                Flights: {journey.length} Total Duration:{" "}
+                {getJourneyDuration(
+                  journey[0].departureDateTime,
+                  journey[journey.length - 1].arrivalDateTime
+                )}
               </p>
               <p>
                 Departure:{" "}
-                {new Date(journey.departureDateTime).toLocaleString()}
+                {new Date(journey[0].departureDateTime).toLocaleString()}
               </p>
               <p>
-                Arrival: {new Date(journey.arrivalDateTime).toLocaleString()}
+                Arrival:{" "}
+                {new Date(
+                  journey[journey.length - 1].arrivalDateTime
+                ).toLocaleString()}
               </p>
             </div>
             <ul className="space-y-2">
