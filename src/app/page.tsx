@@ -3,9 +3,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { FormData, CURRENCIES } from "./types";
+import { FormData, CURRENCIES, Journey, Fare, FareWapper } from "./types";
 import endpoints from "./endpoints";
-import { getJourneyDuration } from "./utils";
+import { getJourneyId } from "./utils";
 
 function App() {
   const [airports, setAirports] = useState();
@@ -15,16 +15,9 @@ function App() {
     origin: "",
     destination: "",
   });
-  const [journeys, setJourneys] = useState([]);
+  const [journeys, setJourneys] = useState<Journey[]>([]);
   const [journeyPriceMap, setJourneyPriceMap] = useState(new Map());
   const currency = CURRENCIES.SEK;
-
-  const getJourneyId = (journey) =>
-    `${journey[0].departureAirportCode}_${
-      journey[journey.length - 1].arrivalAirportCode
-    }_${journey[0].departureDateTime}_${
-      journey[journey.length - 1].arrivalDateTime
-    }`;
 
   useEffect(() => {
     async function fetchAirports() {
@@ -71,9 +64,8 @@ function App() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data = await response.json();
-      const responseJourneys = data.map(({ flights }) => flights);
-      setJourneys(responseJourneys);
+      const journeys: Journey[] = await response.json();
+      setJourneys(journeys);
       const newMap = new Map();
       journeys.forEach((journey) => {
         newMap.set(getJourneyId(journey), 0);
@@ -85,8 +77,8 @@ function App() {
     }
   };
 
-  const handleGetPriceSubmit = async (flights: any[]) => {
-    const requestURLs = flights?.map((flight) => {
+  const handleGetPriceSubmit = async (journey: Journey) => {
+    const requestURLs = journey.flights?.map((flight) => {
       const dateOut = new Date(flight.departureDateTime)
         .toISOString()
         .split("T")[0];
@@ -97,27 +89,26 @@ function App() {
     const responses = await Promise.all(
       requestURLs.map((url) => fetch(url, { method: "GET" }))
     );
-    const fares = await Promise.all(
+    const fares: FareWapper[] = await Promise.all(
       responses.map(async (res) => {
         return res.json();
       })
     );
 
-    const price = flights.reduce((finalPrice, _, flightIndex) => {
+    const price = journey.flights.reduce((finalPrice, _, flightIndex) => {
       const faresForFlight = fares[flightIndex].outbound.fares;
-      const date = flights[flightIndex].departureDateTime.split("T")[0];
+      const date = journey.flights[flightIndex].departureDateTime.split("T")[0];
       return (
         finalPrice +
-        faresForFlight.find((fare) => fare.day === date).price.value
+        (faresForFlight.find((fare: Fare) => fare.day === date)?.price.value ||
+          0)
       );
     }, 0);
 
     const newMap = new Map(journeyPriceMap);
-    newMap.set(getJourneyId(flights), price);
+    newMap.set(getJourneyId(journey), price);
     setJourneyPriceMap(newMap);
   };
-
-  console.log(journeys);
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-gray-100 shadow-md rounded-lg">
@@ -223,29 +214,23 @@ function App() {
         </div>
       </form>
       <ul className="space-y-4">
-        {journeys.map((journey: any, index) => (
+        {journeys.map((journey, index) => (
           <li key={index} className="p-4 border rounded-lg shadow-sm">
             <div className="mb-2 font-medium">
               <p>
-                Flights: {journey.length} Total Duration:{" "}
-                {getJourneyDuration(
-                  journey[0].departureDateTime,
-                  journey[journey.length - 1].arrivalDateTime
-                )}
+                Flights: {journey.flights.length} Total Duration:{" "}
+                {journey.duration}
               </p>
               <p>
                 Departure:{" "}
-                {new Date(journey[0].departureDateTime).toLocaleString()}
+                {new Date(journey.departureDateTime).toLocaleString()}
               </p>
               <p>
-                Arrival:{" "}
-                {new Date(
-                  journey[journey.length - 1].arrivalDateTime
-                ).toLocaleString()}
+                Arrival: {new Date(journey.arrivalDateTime).toLocaleString()}
               </p>
             </div>
             <ul className="space-y-2">
-              {journey.map((leg: any, legIndex: number) => (
+              {journey.flights.map((leg: any, legIndex: number) => (
                 <li key={legIndex} className="pl-4">
                   <p>
                     <strong>Flight {legIndex + 1}:</strong>

@@ -1,12 +1,10 @@
-export function getJourneyDuration(departure: string, arrival: string): string {
-  const dep = new Date(departure);
-  const arr = new Date(arrival);
+import { Journey } from "./types";
 
-  const diffMs = arr.getTime() - dep.getTime(); // difference in milliseconds
-
-  const diffMinutes = Math.floor(diffMs / (1000 * 60));
-  const hours = Math.floor(diffMinutes / 60);
-  const minutes = diffMinutes % 60;
-
-  return `${hours}h ${minutes}m`;
-}
+export const getJourneyId = (journey: Journey) => {
+  const flights = journey.flights;
+  return `${flights[0].departureAirportCode}_${
+    flights[flights.length - 1].arrivalAirportCode
+  }_${flights[0].departureDateTime}_${
+    flights[flights.length - 1].arrivalDateTime
+  }`;
+};
