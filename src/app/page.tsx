@@ -5,7 +5,7 @@
 import React, { useEffect, useState } from "react";
 import { FormData, CURRENCIES, Journey, Fare, FareWapper } from "./types";
 import endpoints from "./endpoints";
-import { getJourneyId } from "./utils";
+import { buildJourneyUrlPath, getJourneyId } from "./utils";
 
 function App() {
   const [airports, setAirports] = useState();
@@ -35,28 +35,11 @@ function App() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const buildPath = (params: FormData): string => {
-    const filteredParams = Object.fromEntries(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      Object.entries(params).filter(
-        ([key, value]) =>
-          !["origin", "destination"].includes(key) && value !== ""
-      )
-    );
-
-    const path = `${params.origin}/${params.destination}`;
-    const queryParams = new URLSearchParams(
-      filteredParams as Record<string, string>
-    ).toString();
-
-    return `${path}?${queryParams}`;
-  };
-
   const handleFindJourneySubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
-    const path = buildPath(formData);
+    const path = buildJourneyUrlPath(formData);
     const requestURL = `${endpoints.URL_JOURNEYS}/${path}`;
 
     try {
