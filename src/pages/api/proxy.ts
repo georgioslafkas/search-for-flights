@@ -1,10 +1,11 @@
+import endpoints from "@/app/endpoints";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export default async function handler(req: any, res: any) {
-  const apiUrl = `https://www.ryanair.com/api/booking/v4/en-ie/availability`;
   const queryString = new URLSearchParams(req.query).toString();
 
   try {
-    const response = await fetch(`${apiUrl}?${queryString}`, {
+    const response = await fetch(`${endpoints.AVAILABILITY}?${queryString}`, {
       method: "GET",
     });
 
