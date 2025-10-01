@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FormData, Journey, CURRENCIES, Airport } from "@/app/types";
+import { FormData, Journey, CURRENCIES, Airport, Flight } from "@/app/types";
 import { findJourneys, getPrice } from "@/app/serverActions";
 import { getJourneyId } from "@/app/utils";
 
@@ -192,6 +192,23 @@ function App({ airports }: { airports: Airport[] }) {
                 <p>
                   Arrival: {new Date(journey.arrivalDateTime).toLocaleString()}
                 </p>
+                <ul className="space-y-2">
+                  {journey.flights.map((leg: Flight, legIndex: number) => (
+                    <li key={legIndex} className="pl-4">
+                      <p>
+                        <strong>Flight {legIndex + 1}:</strong>
+                      </p>
+                      <p>
+                        Origin: {leg.departureAirportCode},{" "}
+                        {new Date(leg.departureDateTime).toLocaleString()}
+                      </p>
+                      <p>
+                        Destination: {leg.arrivalAirportCode},{" "}
+                        {new Date(leg.arrivalDateTime).toLocaleString()}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
               <button
