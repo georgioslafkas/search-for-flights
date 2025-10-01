@@ -1,5 +1,8 @@
 import App from "./App";
+import { fetchAirports } from "./serverActions";
 
-export default function Page() {
-  return <App />;
+export default async function Page() {
+  const airports = await fetchAirports();
+
+  return <App airports={airports} />;
 }

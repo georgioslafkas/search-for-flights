@@ -55,3 +55,32 @@ export type Fare = {
   soldOut: boolean;
   unavailable: boolean;
 };
+
+export type Airport = {
+  code: string;
+  name: string;
+  seoName: string;
+  aliases: string[];
+  base: boolean;
+  city: {
+    name: string;
+    code: string;
+  };
+  region: {
+    name: string;
+    code: string;
+  };
+  country: {
+    code: string;
+    iso3code: string;
+    name: string;
+    currency: string;
+    defaultAirportCode: string;
+    schengen: true;
+  };
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+  timeZone: string;
+};

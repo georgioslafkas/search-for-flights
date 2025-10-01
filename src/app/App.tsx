@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { FormData, Journey, CURRENCIES } from "@/app/types";
+import { FormData, Journey, CURRENCIES, Airport } from "@/app/types";
 import { findJourneys, getPrice } from "@/app/serverActions";
 import { getJourneyId } from "@/app/utils";
 
-function App() {
+function App({ airports }: { airports: Airport[] }) {
   const [formData, setFormData] = useState<FormData>({
     departureDateFrom: "",
     departureDateTo: "",
@@ -119,16 +119,23 @@ function App() {
           >
             Origin:
           </label>
-          <input
-            type="text"
+          <select
             id="origin"
             name="origin"
             value={formData.origin}
             onChange={handleChange}
-            placeholder="Enter origin code (e.g., SKG)"
             required
             className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-          />
+          >
+            <option value="" disabled>
+              Select an origin
+            </option>
+            {(airports || []).map((airport) => (
+              <option key={airport.code} value={airport.code}>
+                {airport.name} ({airport.code})
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>
@@ -138,16 +145,25 @@ function App() {
           >
             Destination:
           </label>
-          <input
-            type="text"
+          <select
             id="destination"
             name="destination"
             value={formData.destination}
             onChange={handleChange}
-            placeholder="Enter destination code (e.g., ARN)"
             required
             className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-          />
+          >
+            <option value="" disabled>
+              Select a destination
+            </option>
+            {(airports || [])
+              .filter((airport) => airport.code !== formData.origin)
+              .map((airport) => (
+                <option key={airport.code} value={airport.code}>
+                  {airport.name} ({airport.code})
+                </option>
+              ))}
+          </select>
         </div>
 
         <button
