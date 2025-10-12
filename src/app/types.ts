@@ -5,15 +5,6 @@ export interface FormData {
   destination: string;
 }
 
-export const AVAILABILITY_PARAMS = {
-  ADT: 1,
-  ToUs: "AGREED",
-  FlexDaysBeforeIn: 2,
-  FlexDaysBeforeOut: 2,
-  FlexDaysIn: 2,
-  FlexDaysOut: 2,
-} as const;
-
 export const CURRENCIES = {
   SEK: "SEK",
   EUR: "EUR",
@@ -54,4 +45,33 @@ export type Fare = {
   };
   soldOut: boolean;
   unavailable: boolean;
+};
+
+export type Airport = {
+  code: string;
+  name: string;
+  seoName: string;
+  aliases: string[];
+  base: boolean;
+  city: {
+    name: string;
+    code: string;
+  };
+  region: {
+    name: string;
+    code: string;
+  };
+  country: {
+    code: string;
+    iso3code: string;
+    name: string;
+    currency: string;
+    defaultAirportCode: string;
+    schengen: true;
+  };
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+  timeZone: string;
 };

@@ -1,18 +1,8 @@
-import { Journey } from "./types";
-import { FormData } from "./types";
+import { Flight, FormData, Journey } from "@/app/types";
+import endpoints from "./endpoints";
 
-export const getJourneyId = (journey: Journey) => {
-  const flights = journey.flights;
-  return `${flights[0].departureAirportCode}_${
-    flights[flights.length - 1].arrivalAirportCode
-  }_${flights[0].departureDateTime}_${
-    flights[flights.length - 1].arrivalDateTime
-  }`;
-};
-
-export const buildJourneyUrlPath = (params: FormData): string => {
+export function buildJourneyUrlPath(params: FormData): string {
   const filteredParams = Object.fromEntries(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     Object.entries(params).filter(
       ([key, value]) => !["origin", "destination"].includes(key) && value !== ""
     )
@@ -24,4 +14,18 @@ export const buildJourneyUrlPath = (params: FormData): string => {
   ).toString();
 
   return `${path}?${queryParams}`;
-};
+}
+
+export function getJourneyId(journey: Journey): string {
+  return `${journey.flights[0].departureAirportCode}_${
+    journey.flights[journey.flights.length - 1].arrivalAirportCode
+  }_${journey.departureDateTime}_${journey.arrivalDateTime}`;
+}
+
+export function buildFareUrl(flight: Flight, currency: string) {
+  const dateOut = new Date(flight.departureDateTime)
+    .toISOString()
+    .split("T")[0];
+
+  return `${endpoints.FARE_API}/oneWayFares/${flight.departureAirportCode}/${flight.arrivalAirportCode}/cheapestPerDay?outboundMonthOfDate=${dateOut}&currency=${currency}`;
+}
