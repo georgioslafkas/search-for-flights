@@ -79,7 +79,7 @@ export const JourneyList = ({
             </div>
 
             <button
-              className="mt-2 bg-gray-700 text-white px-3 py-1 rounded-lg hover:bg-gray-800"
+              className="mt-2 bg-sky-800 hover:bg-sky-900 text-white px-3 py-1 rounded-lg"
               onClick={() => handleGetPrice(journey)}
               disabled={loadingPrices.get(id)}
             >
