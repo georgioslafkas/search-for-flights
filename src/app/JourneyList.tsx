@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { CURRENCIES, Flight, Journey } from "./types";
-import { getJourneyId } from "./utils";
+import { getBookingLink, getJourneyId } from "./utils";
 import { getPrice } from "./serverActions";
+import Image from "next/image";
 
 type Props = {
   journeyPriceMap: Map<string, number>;
@@ -61,9 +62,18 @@ export const JourneyList = ({
               </p>
               <ul className="space-y-2">
                 {journey.flights.map((leg: Flight, legIndex: number) => (
-                  <li key={legIndex} className="pl-4">
+                  <li key={legIndex} className="pl-2">
                     <p>
-                      <strong>Flight {legIndex + 1}:</strong>
+                      <strong>Flight {legIndex + 1}</strong>
+                      <a href={getBookingLink(leg)} target="_blank">
+                        <Image
+                          src="openTab.svg"
+                          alt={`Open flight from ${leg.departureAirportCode} to ${leg.arrivalAirportCode} in new tab`}
+                          width={24}
+                          height={24}
+                          className="inline"
+                        />
+                      </a>
                     </p>
                     <p>
                       Origin: {leg.departureAirportCode},{" "}
@@ -77,7 +87,6 @@ export const JourneyList = ({
                 ))}
               </ul>
             </div>
-
             <button
               className="mt-2 bg-sky-800 hover:bg-sky-900 text-white px-3 py-1 rounded-lg"
               onClick={() => handleGetPrice(journey)}

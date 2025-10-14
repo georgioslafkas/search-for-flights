@@ -29,3 +29,8 @@ export function buildFareUrl(flight: Flight, currency: string) {
 
   return `${endpoints.FARE_API}/oneWayFares/${flight.departureAirportCode}/${flight.arrivalAirportCode}/cheapestPerDay?outboundMonthOfDate=${dateOut}&currency=${currency}`;
 }
+
+export function getBookingLink(flight: Flight) {
+  const startDate = new Date(flight.departureDateTime).toLocaleDateString("sv");
+  return `${endpoints.URL_BOOKING}?tpAdults=1&tpStartDate=${startDate}&tpOriginIata=${flight.departureAirportCode}&tpDestinationIata=${flight.arrivalAirportCode}`;
+}
