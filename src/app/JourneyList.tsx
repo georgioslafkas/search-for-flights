@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { CURRENCIES, Flight, Journey } from "./types";
-import { getBookingLink, getJourneyId } from "./utils";
+import { CurrencyMap, getBookingLink, getJourneyId } from "./utils";
 import { getPrice } from "./serverActions";
 import Image from "next/image";
 
@@ -97,7 +97,7 @@ export const JourneyList = ({
 
             <p className="mt-2 text-gray-800 font-semibold">
               {journeyPriceMap.get(id)
-                ? `${journeyPriceMap.get(id)?.toFixed(2)} ${currency}`
+                ? `${journeyPriceMap.get(id)?.toFixed(2)}${CurrencyMap.EUR}`
                 : ""}
             </p>
           </li>
