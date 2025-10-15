@@ -18,7 +18,7 @@ export const JourneyList = ({
   const [loadingPrices, setLoadingPrices] = useState<Map<string, boolean>>(
     new Map()
   );
-  const currency = CURRENCIES.SEK;
+  const currency = CURRENCIES.EUR;
 
   const handleGetPrice = async (journey: Journey) => {
     const id = getJourneyId(journey);
