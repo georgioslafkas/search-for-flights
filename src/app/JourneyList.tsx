@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { CURRENCIES, Flight, Journey } from "./types";
-import { CurrencyMap, getBookingLink, getJourneyId } from "./utils";
+import { Flight, Journey } from "./types";
+import { currencies, getBookingLink, getJourneyId } from "./utils";
 import { getPrice } from "./serverActions";
 import Image from "next/image";
 
@@ -8,17 +8,18 @@ type Props = {
   journeyPriceMap: Map<string, number>;
   setJourneyPriceMap: Dispatch<SetStateAction<Map<string, number>>>;
   journeys: Journey[];
+  selectedCurrency: (typeof currencies)[keyof typeof currencies];
 };
 
 export const JourneyList = ({
   journeyPriceMap,
   setJourneyPriceMap,
   journeys,
+  selectedCurrency,
 }: Props) => {
   const [loadingPrices, setLoadingPrices] = useState<Map<string, boolean>>(
     new Map()
   );
-  const currency = CURRENCIES.EUR;
 
   const handleGetPrice = async (journey: Journey) => {
     const id = getJourneyId(journey);
@@ -29,7 +30,7 @@ export const JourneyList = ({
     setLoadingPrices(newLoadingMap);
 
     try {
-      const price = await getPrice(journey, currency);
+      const price = await getPrice(journey, selectedCurrency.label);
       const newPriceMap = new Map(journeyPriceMap);
       newPriceMap.set(id, price);
       setJourneyPriceMap(newPriceMap);
@@ -97,7 +98,9 @@ export const JourneyList = ({
 
             <p className="mt-2 text-gray-800 font-semibold">
               {journeyPriceMap.get(id)
-                ? `${journeyPriceMap.get(id)?.toFixed(2)}${CurrencyMap.EUR}`
+                ? `${journeyPriceMap.get(id)?.toFixed(2)}${
+                    selectedCurrency.symbol
+                  }`
                 : ""}
             </p>
           </li>

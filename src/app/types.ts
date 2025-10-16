@@ -5,11 +5,6 @@ export interface FormData {
   destination: string;
 }
 
-export const CURRENCIES = {
-  SEK: "SEK",
-  EUR: "EUR",
-} as const;
-
 export type Journey = {
   arrivalDateTime: string;
   departureDateTime: string;

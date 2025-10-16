@@ -1,4 +1,4 @@
-import { CURRENCIES, Flight, FormData, Journey } from "@/app/types";
+import { Flight, FormData, Journey } from "@/app/types";
 import endpoints from "./endpoints";
 
 export function buildJourneyUrlPath(params: FormData): string {
@@ -35,7 +35,7 @@ export function getBookingLink(flight: Flight) {
   return `${endpoints.URL_BOOKING}?tpAdults=1&tpStartDate=${startDate}&tpOriginIata=${flight.departureAirportCode}&tpDestinationIata=${flight.arrivalAirportCode}`;
 }
 
-export const CurrencyMap = {
-  [CURRENCIES.EUR]: "€",
-  [CURRENCIES.SEK]: "kr",
-};
+export const currencies = {
+  EUR: { label: "EUR", symbol: "€" },
+  SEK: { label: "SEK", symbol: "kr" },
+} as const;

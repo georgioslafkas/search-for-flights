@@ -46,11 +46,12 @@ export async function getPrice(journey: Journey, currency: string) {
   );
 
   const price = journey.flights.reduce((finalPrice, _, flightIndex) => {
-    const faresForFlight = fares[flightIndex].outbound.fares;
+    const faresForFlight = fares?.[flightIndex]?.outbound?.fares;
     const date = journey.flights[flightIndex].departureDateTime.split("T")[0];
     return (
       finalPrice +
-      (faresForFlight.find((fare: Fare) => fare.day === date)?.price.value || 0)
+      (faresForFlight?.find((fare: Fare) => fare.day === date)?.price?.value ||
+        0)
     );
   }, 0);
 
