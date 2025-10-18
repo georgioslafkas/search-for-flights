@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Journey, Airport } from "@/app/types";
+import { Journey, Airport, currencies, Currency } from "@/app/types";
 import { FindJourneys } from "./FindJourneys";
 import { JourneyList } from "./JourneyList";
-import { currencies } from "./utils";
+import { getPrice } from "./serverActions";
+import { getJourneyId, getJourneysWithPrice } from "./utils";
 
 function App({ airports }: { airports: Airport[] }) {
   const [journeys, setJourneys] = useState<Journey[]>([]);
@@ -12,6 +13,49 @@ function App({ airports }: { airports: Airport[] }) {
     new Map()
   );
   const [currency, setSelectedCurrency] = useState(currencies.EUR);
+  const [loadingPrices, setLoadingPrices] = useState<Map<string, boolean>>(
+    new Map()
+  );
+
+  const handleGetPrice = async (
+    journey: Journey,
+    currency: Currency["label"]
+  ) => {
+    const id = getJourneyId(journey);
+
+    // mark this journey as loading
+    const newLoadingMap = new Map(loadingPrices);
+    newLoadingMap.set(id, true);
+    setLoadingPrices(newLoadingMap);
+
+    try {
+      const price = await getPrice(journey, currency);
+      const newPriceMap = new Map(journeyPriceMap);
+      newPriceMap.set(id, price);
+      setJourneyPriceMap((prevMap) => {
+        const newMap = new Map(prevMap);
+        newMap.set(id, price);
+        return newMap;
+      });
+    } catch (err) {
+      console.error("Error fetching price:", err);
+    } finally {
+      const updatedLoadingMap = new Map(loadingPrices);
+      updatedLoadingMap.set(id, false);
+      setLoadingPrices(updatedLoadingMap);
+    }
+  };
+
+  const handleChangeCurrency = async (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const currency = JSON.parse(e.target.value);
+    setSelectedCurrency(currency);
+    const journeysToUpdate = getJourneysWithPrice(journeyPriceMap, journeys);
+    for (const journey of journeysToUpdate) {
+      await handleGetPrice(journey, currency.label);
+    }
+  };
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-gray-100 shadow-md rounded-lg bg-white">
@@ -23,15 +67,14 @@ function App({ airports }: { airports: Airport[] }) {
       />
       <JourneyList
         journeyPriceMap={journeyPriceMap}
-        setJourneyPriceMap={setJourneyPriceMap}
         journeys={journeys}
         selectedCurrency={currency}
+        handleGetPrice={handleGetPrice}
+        loadingPrices={loadingPrices}
       />
       <div className="">
         Show prices in:{" "}
-        <select
-          onChange={(e) => setSelectedCurrency(JSON.parse(e.target.value))}
-        >
+        <select onChange={handleChangeCurrency}>
           {Object.values(currencies).map((currency) => (
             <option key={currency.label} value={JSON.stringify(currency)}>
               {currency.label}

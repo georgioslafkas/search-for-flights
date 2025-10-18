@@ -1,7 +1,7 @@
 "use server";
 
 import endpoints from "@/app/endpoints";
-import { Fare, FareWapper, FormData, Journey } from "@/app/types";
+import { Currency, Fare, FareWapper, FormData, Journey } from "@/app/types";
 import { buildFareUrl, buildJourneyUrlPath } from "@/app/utils";
 
 export async function fetchAirports() {
@@ -32,7 +32,7 @@ export async function findJourneys(formData: FormData): Promise<Journey[]> {
   return res.json();
 }
 
-export async function getPrice(journey: Journey, currency: string) {
+export async function getPrice(journey: Journey, currency: Currency["label"]) {
   const requestURLs = journey.flights.map((flight) =>
     buildFareUrl(flight, currency)
   );

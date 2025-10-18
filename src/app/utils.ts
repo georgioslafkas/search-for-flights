@@ -1,4 +1,4 @@
-import { Flight, FormData, Journey } from "@/app/types";
+import { Flight, FormData, Journey, JourneyPriceMap } from "@/app/types";
 import endpoints from "./endpoints";
 
 export function buildJourneyUrlPath(params: FormData): string {
@@ -22,6 +22,21 @@ export function getJourneyId(journey: Journey): string {
   }_${journey.departureDateTime}_${journey.arrivalDateTime}`;
 }
 
+export function getJourneysWithPrice(
+  journeyPriceMap: JourneyPriceMap,
+  journeys: Journey[]
+) {
+  const journeysWithPriceKeys = Array.from(journeyPriceMap.entries())
+    .filter(([_, value]) => value > 0)
+    .map(([key]) => key);
+
+  const matches = journeys.filter((journey) => {
+    const journeyId = getJourneyId(journey);
+    return journeysWithPriceKeys.includes(journeyId);
+  });
+  return matches;
+}
+
 export function buildFareUrl(flight: Flight, currency: string) {
   const dateOut = new Date(flight.departureDateTime)
     .toISOString()
@@ -34,8 +49,3 @@ export function getBookingLink(flight: Flight) {
   const startDate = new Date(flight.departureDateTime).toLocaleDateString("sv");
   return `${endpoints.URL_BOOKING}?tpAdults=1&tpStartDate=${startDate}&tpOriginIata=${flight.departureAirportCode}&tpDestinationIata=${flight.arrivalAirportCode}`;
 }
-
-export const currencies = {
-  EUR: { label: "EUR", symbol: "€" },
-  SEK: { label: "SEK", symbol: "kr" },
-} as const;

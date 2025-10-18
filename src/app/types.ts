@@ -70,3 +70,12 @@ export type Airport = {
   };
   timeZone: string;
 };
+
+export const currencies = {
+  EUR: { label: "EUR", symbol: "€" },
+  SEK: { label: "SEK", symbol: "kr" },
+} as const;
+
+export type Currency = (typeof currencies)[keyof typeof currencies];
+
+export type JourneyPriceMap = Map<string, number>;
