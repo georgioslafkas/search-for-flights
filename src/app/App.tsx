@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Journey,
   Airport,
@@ -23,6 +23,7 @@ function App({ airports }: { airports: Airport[] }) {
   const [loadingPrices, setLoadingPrices] = useState<Map<string, boolean>>(
     new Map()
   );
+  const journeyListRef = useRef<HTMLUListElement>(null);
 
   const handleGetPrice = async (
     journey: Journey,
@@ -57,6 +58,13 @@ function App({ airports }: { airports: Airport[] }) {
     }
   };
 
+  const handleJourneysFound = (newJourneys: Journey[]) => {
+    setJourneys(newJourneys);
+    setTimeout(() => {
+      journeyListRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 0);
+  };
+
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-gray-100 shadow-md rounded-lg bg-white">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Find Flights</h1>
@@ -64,6 +72,7 @@ function App({ airports }: { airports: Airport[] }) {
         airports={airports}
         setJourneyPriceMap={setJourneyPriceMap}
         setJourneys={setJourneys}
+        onJourneysFound={handleJourneysFound}
       />
       <JourneyList
         journeyPriceMap={journeyPriceMap}
@@ -71,6 +80,7 @@ function App({ airports }: { airports: Airport[] }) {
         selectedCurrency={currency}
         handleGetPrice={handleGetPrice}
         loadingPrices={loadingPrices}
+        listRef={journeyListRef}
       />
       <SelectCurrency
         setSelectedCurrency={setSelectedCurrency}

@@ -8,12 +8,14 @@ type Props = {
   setJourneys: Dispatch<SetStateAction<Journey[]>>;
   setJourneyPriceMap: Dispatch<SetStateAction<Map<string, number>>>;
   airports: Airport[];
+  onJourneysFound: (journeys: Journey[]) => void;
 };
 
 export const FindJourneys = ({
   setJourneys,
   setJourneyPriceMap,
   airports,
+  onJourneysFound,
 }: Props) => {
   const [formData, setFormData] = useState<FormData>({
     departureDateFrom: "",
@@ -31,7 +33,7 @@ export const FindJourneys = ({
     try {
       setSearchingJourneys(true);
       const journeys = await findJourneys(formData);
-      setJourneys(journeys);
+      onJourneysFound(journeys);
 
       // reset price map
       const newMap = new Map();

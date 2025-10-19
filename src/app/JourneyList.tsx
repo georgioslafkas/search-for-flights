@@ -1,6 +1,5 @@
 import { Currency, Journey } from "./types";
 import { JourneyItem } from "./JourneyItem";
-import { useEffect, useRef } from "react";
 
 type Props = {
   journeyPriceMap: Map<string, number>;
@@ -11,6 +10,7 @@ type Props = {
     journey: Journey,
     currency: Currency["label"]
   ) => Promise<void>;
+  listRef: React.RefObject<HTMLUListElement>;
 };
 
 export const JourneyList = ({
@@ -19,19 +19,10 @@ export const JourneyList = ({
   selectedCurrency,
   handleGetPrice,
   loadingPrices,
+  listRef,
 }: Props) => {
-  const list = useRef<HTMLUListElement>(null);
-  const journeysRef = useRef(journeys);
-
-  useEffect(() => {
-    if (JSON.stringify(journeys) !== JSON.stringify(journeysRef.current)) {
-      list.current?.scrollIntoView({ behavior: "smooth" });
-      journeysRef.current = journeys;
-    }
-  }, [journeys]);
-
   return (
-    <ul ref={list} id="journey-list" className="space-y-4 mt-6">
+    <ul ref={listRef} id="journey-list" className="space-y-4 mt-6">
       {journeys.map((journey, index) => (
         <JourneyItem
           journeyPriceMap={journeyPriceMap}
