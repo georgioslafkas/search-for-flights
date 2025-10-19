@@ -1,18 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
-import { Journey, Airport, currencies, Currency } from "@/app/types";
+import {
+  Journey,
+  Airport,
+  currencies,
+  Currency,
+  JourneyPriceMap,
+} from "@/app/types";
 import { FindJourneys } from "./FindJourneys";
 import { JourneyList } from "./JourneyList";
 import { getPrice } from "./serverActions";
-import { getJourneyId, getJourneysWithPrice } from "./utils";
+import { getJourneyId } from "./utils";
+import { SelectCurrency } from "./SelectCurrency";
 
 function App({ airports }: { airports: Airport[] }) {
   const [journeys, setJourneys] = useState<Journey[]>([]);
-  const [journeyPriceMap, setJourneyPriceMap] = useState<Map<string, number>>(
+  const [journeyPriceMap, setJourneyPriceMap] = useState<JourneyPriceMap>(
     new Map()
   );
-  const [currency, setSelectedCurrency] = useState(currencies.EUR);
+  const [currency, setSelectedCurrency] = useState<Currency>(currencies.EUR);
   const [loadingPrices, setLoadingPrices] = useState<Map<string, boolean>>(
     new Map()
   );
@@ -42,18 +49,11 @@ function App({ airports }: { airports: Airport[] }) {
     } finally {
       const updatedLoadingMap = new Map(loadingPrices);
       updatedLoadingMap.set(id, false);
-      setLoadingPrices(updatedLoadingMap);
-    }
-  };
-
-  const handleChangeCurrency = async (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const currency = JSON.parse(e.target.value);
-    setSelectedCurrency(currency);
-    const journeysToUpdate = getJourneysWithPrice(journeyPriceMap, journeys);
-    for (const journey of journeysToUpdate) {
-      await handleGetPrice(journey, currency.label);
+      setLoadingPrices((prev) => {
+        const newMap = new Map(prev);
+        newMap.set(id, false);
+        return newMap;
+      });
     }
   };
 
@@ -72,16 +72,12 @@ function App({ airports }: { airports: Airport[] }) {
         handleGetPrice={handleGetPrice}
         loadingPrices={loadingPrices}
       />
-      <div className="">
-        Show prices in:{" "}
-        <select onChange={handleChangeCurrency}>
-          {Object.values(currencies).map((currency) => (
-            <option key={currency.label} value={JSON.stringify(currency)}>
-              {currency.label}
-            </option>
-          ))}
-        </select>
-      </div>
+      <SelectCurrency
+        setSelectedCurrency={setSelectedCurrency}
+        journeyPriceMap={journeyPriceMap}
+        journeys={journeys}
+        handleGetPrice={handleGetPrice}
+      />
     </div>
   );
 }
