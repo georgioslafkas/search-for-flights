@@ -21,15 +21,15 @@ export const SelectCurrency = ({
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const currency = JSON.parse(e.target.value);
-    setSelectedCurrency(currency);
     const journeysToUpdate = getJourneysWithPrice(journeyPriceMap, journeys);
     for (const journey of journeysToUpdate) {
       await handleGetPrice(journey, currency.label);
     }
+    setSelectedCurrency(currency);
   };
 
   return (
-    <div className="">
+    <div className="flex justify-center mt-4">
       Show prices in:{" "}
       <select onChange={handleChangeCurrency}>
         {Object.values(currencies).map((currency) => (

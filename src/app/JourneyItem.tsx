@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import { Currency, Flight, Journey } from "./types";
 import { getJourneyId, getBookingLink } from "./utils";
 import Image from "next/image";
@@ -22,6 +21,13 @@ export const JourneyItem = ({
   loadingPrices,
 }: Props) => {
   const id = getJourneyId(journey);
+  const price = `${journeyPriceMap.get(id)?.toFixed(2)}${
+    selectedCurrency.symbol
+  }`;
+  const showPrice = Boolean(journeyPriceMap.get(id)) && !loadingPrices.get(id);
+  const showSpinner =
+    (journeyPriceMap.get(id) || loadingPrices.get(id)) && !showPrice;
+
   return (
     <li className="p-4 border rounded-lg shadow-sm">
       <div className="mb-2 font-medium">
@@ -62,13 +68,25 @@ export const JourneyItem = ({
         onClick={() => handleGetPrice(journey, selectedCurrency.label)}
         disabled={loadingPrices.get(id)}
       >
-        {loadingPrices.get(id) ? "Loading..." : "Get Price"}
+        Get Price
       </button>
 
-      <p className="mt-2 text-gray-800 font-semibold">
-        {journeyPriceMap.get(id)
-          ? `${journeyPriceMap.get(id)?.toFixed(2)}${selectedCurrency.symbol}`
-          : ""}
+      <p className="mt-2 text-gray-800 font-semibold min-h-6">
+        {showPrice && price}
+        {showSpinner && (
+          <svg viewBox="0 0 50 50" width="24" height="24">
+            <circle
+              cx="25"
+              cy="25"
+              r="20"
+              fill="none"
+              stroke="#075985"
+              strokeWidth="4"
+              strokeLinecap="round"
+              className="spinner-ring"
+            />
+          </svg>
+        )}
       </p>
     </li>
   );

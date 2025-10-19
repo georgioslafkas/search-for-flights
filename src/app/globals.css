@@ -17,3 +17,27 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 1 200;
+    stroke-dashoffset: -125;
+  }
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.spinner-ring {
+  transform-origin: 50% 50%;
+  animation: spin 1s linear infinite, dash 1.2s ease-in-out infinite;
+}
