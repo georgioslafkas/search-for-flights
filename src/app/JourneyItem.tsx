@@ -27,6 +27,7 @@ export const JourneyItem = ({
   const showPrice = Boolean(journeyPriceMap.get(id)) && !loadingPrices.get(id);
   const showSpinner =
     (journeyPriceMap.get(id) || loadingPrices.get(id)) && !showPrice;
+  const disabled = loadingPrices.get(id) || Boolean(journeyPriceMap.get(id)); // button will only be clicked once, after that the only change may come from currency update
 
   return (
     <li className="p-4 border rounded-lg shadow-sm">
@@ -66,7 +67,7 @@ export const JourneyItem = ({
       <button
         className="mt-2 bg-sky-800 hover:bg-sky-900 text-white px-3 py-1 rounded-lg"
         onClick={() => handleGetPrice(journey, selectedCurrency.label)}
-        disabled={loadingPrices.get(id)}
+        disabled={disabled}
       >
         Get Price
       </button>
