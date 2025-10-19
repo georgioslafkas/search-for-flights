@@ -1,3 +1,4 @@
+import { Spinner } from "./Spinner";
 import { Currency, Flight, Journey } from "./types";
 import { getJourneyId, getBookingLink } from "./utils";
 import Image from "next/image";
@@ -74,20 +75,7 @@ export const JourneyItem = ({
 
       <p className="mt-2 text-gray-800 font-semibold min-h-6">
         {showPrice && price}
-        {showSpinner && (
-          <svg viewBox="0 0 50 50" width="24" height="24">
-            <circle
-              cx="25"
-              cy="25"
-              r="20"
-              fill="none"
-              stroke="#075985"
-              strokeWidth="4"
-              strokeLinecap="round"
-              className="spinner-ring"
-            />
-          </svg>
-        )}
+        {showSpinner && <Spinner size={24} />}
       </p>
     </li>
   );
