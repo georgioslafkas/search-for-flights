@@ -4,7 +4,7 @@ import { getJourneysWithPrice } from "./utils";
 type Props = {
   setSelectedCurrency: React.Dispatch<React.SetStateAction<Currency>>;
   journeyPriceMap: JourneyPriceMap;
-  journeys: Journey[];
+  journeys: Journey[] | null;
   handleGetPrice: (
     journey: Journey,
     currency: Currency["label"]
@@ -21,7 +21,8 @@ export const SelectCurrency = ({
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const currency = JSON.parse(e.target.value);
-    const journeysToUpdate = getJourneysWithPrice(journeyPriceMap, journeys);
+    const journeysToUpdate =
+      getJourneysWithPrice(journeyPriceMap, journeys) || [];
     for (const journey of journeysToUpdate) {
       await handleGetPrice(journey, currency.label);
     }

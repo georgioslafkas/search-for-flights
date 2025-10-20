@@ -15,7 +15,7 @@ import { getJourneyId } from "./utils";
 import { SelectCurrency } from "./SelectCurrency";
 
 function App({ airports }: { airports: Airport[] }) {
-  const [journeys, setJourneys] = useState<Journey[]>([]);
+  const [journeys, setJourneys] = useState<Journey[] | null>(null);
   const [journeyPriceMap, setJourneyPriceMap] = useState<JourneyPriceMap>(
     new Map()
   );
@@ -23,7 +23,7 @@ function App({ airports }: { airports: Airport[] }) {
   const [loadingPrices, setLoadingPrices] = useState<Map<string, boolean>>(
     new Map()
   );
-  const journeyListRef = useRef<HTMLUListElement>(null);
+  const journeyResultRef = useRef<HTMLUListElement | HTMLDivElement>(null);
 
   const handleGetPrice = async (
     journey: Journey,
@@ -61,7 +61,7 @@ function App({ airports }: { airports: Airport[] }) {
   const handleJourneysFound = (newJourneys: Journey[]) => {
     setJourneys(newJourneys);
     setTimeout(() => {
-      journeyListRef.current?.scrollIntoView({ behavior: "smooth" });
+      journeyResultRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 0);
   };
 
@@ -80,7 +80,7 @@ function App({ airports }: { airports: Airport[] }) {
         selectedCurrency={currency}
         handleGetPrice={handleGetPrice}
         loadingPrices={loadingPrices}
-        listRef={journeyListRef}
+        resultRef={journeyResultRef}
       />
       <SelectCurrency
         setSelectedCurrency={setSelectedCurrency}

@@ -24,7 +24,7 @@ export function getJourneyId(journey: Journey): string {
 
 export function getJourneysWithPrice(
   journeyPriceMap: JourneyPriceMap,
-  journeys: Journey[]
+  journeys: Journey[] | null
 ) {
   const journeysWithPriceKeys: string[] = [];
   journeyPriceMap.forEach((value, key) => {
@@ -33,7 +33,7 @@ export function getJourneysWithPrice(
     }
   });
 
-  const matches = journeys.filter((journey) => {
+  const matches = journeys?.filter((journey) => {
     const journeyId = getJourneyId(journey);
     return journeysWithPriceKeys.includes(journeyId);
   });

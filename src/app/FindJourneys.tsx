@@ -5,7 +5,7 @@ import { Airport, FormData, Journey } from "./types";
 import { Spinner } from "./Spinner";
 
 type Props = {
-  setJourneys: Dispatch<SetStateAction<Journey[]>>;
+  setJourneys: Dispatch<SetStateAction<Journey[] | null>>;
   setJourneyPriceMap: Dispatch<SetStateAction<Map<string, number>>>;
   airports: Airport[];
   onJourneysFound: (journeys: Journey[]) => void;
@@ -31,6 +31,7 @@ export const FindJourneys = ({
     e.preventDefault();
 
     try {
+      setJourneys(null);
       setSearchingJourneys(true);
       const journeys = await findJourneys(formData);
       onJourneysFound(journeys);
