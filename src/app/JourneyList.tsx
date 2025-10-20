@@ -27,7 +27,7 @@ export const JourneyList = ({
       <>
         <div
           ref={resultRef as React.RefObject<HTMLDivElement>}
-          className="flex justify-center items-center flex-col mt-4 mb-4"
+          className="flex justify-center items-center flex-col mt-4 mb-4 border-2 border-dashed"
         >
           No journeys found
           <Image
@@ -41,7 +41,7 @@ export const JourneyList = ({
     );
   }
 
-  return (
+  return journeys?.length ? (
     <ul
       ref={resultRef as React.RefObject<HTMLUListElement>}
       id="journey-list"
@@ -58,5 +58,5 @@ export const JourneyList = ({
         />
       ))}
     </ul>
-  );
+  ) : null;
 };

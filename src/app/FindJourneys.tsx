@@ -3,6 +3,7 @@ import { findJourneys } from "./serverActions";
 import { getJourneyId } from "./utils";
 import { Airport, FormData, Journey } from "./types";
 import { Spinner } from "./Spinner";
+import { Error } from "./Error";
 
 type Props = {
   setJourneys: Dispatch<SetStateAction<Journey[] | null>>;
@@ -24,6 +25,7 @@ export const FindJourneys = ({
     destination: "",
   });
   const [searchingJourneys, setSearchingJourneys] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleFindJourneySubmit = async (
     e: React.FormEvent<HTMLFormElement>
@@ -32,6 +34,7 @@ export const FindJourneys = ({
 
     try {
       setJourneys(null);
+      setError(null);
       setSearchingJourneys(true);
       const journeys = await findJourneys(formData);
       onJourneysFound(journeys);
@@ -43,6 +46,7 @@ export const FindJourneys = ({
     } catch (err) {
       console.error("Error fetching journeys:", err);
       setJourneys([]);
+      setError(`Something went wrong when looking for journeys`);
     } finally {
       setSearchingJourneys(false);
     }
@@ -156,6 +160,7 @@ export const FindJourneys = ({
         </button>
       </form>
       {searchingJourneys && <Spinner size={64} className="mx-auto mt-6" />}
+      <Error error={error} />
     </>
   );
 };

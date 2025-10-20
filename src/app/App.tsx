@@ -13,6 +13,7 @@ import { JourneyList } from "./JourneyList";
 import { getPrice } from "./serverActions";
 import { getJourneyId } from "./utils";
 import { SelectCurrency } from "./SelectCurrency";
+import { Error } from "./Error";
 
 function App({ airports }: { airports: Airport[] }) {
   const [journeys, setJourneys] = useState<Journey[] | null>(null);
@@ -24,6 +25,7 @@ function App({ airports }: { airports: Airport[] }) {
     new Map()
   );
   const journeyResultRef = useRef<HTMLUListElement | HTMLDivElement>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleGetPrice = async (
     journey: Journey,
@@ -37,6 +39,7 @@ function App({ airports }: { airports: Airport[] }) {
     setLoadingPrices(newLoadingMap);
 
     try {
+      setError(null);
       const price = await getPrice(journey, currency);
       const newPriceMap = new Map(journeyPriceMap);
       newPriceMap.set(id, price);
@@ -46,6 +49,7 @@ function App({ airports }: { airports: Airport[] }) {
         return newMap;
       });
     } catch (err) {
+      setError(`Something went wrong when getting the price of the trip`);
       console.error("Error fetching price:", err);
     } finally {
       const updatedLoadingMap = new Map(loadingPrices);
@@ -88,6 +92,7 @@ function App({ airports }: { airports: Airport[] }) {
         journeys={journeys}
         handleGetPrice={handleGetPrice}
       />
+      <Error error={error} />
     </div>
   );
 }
