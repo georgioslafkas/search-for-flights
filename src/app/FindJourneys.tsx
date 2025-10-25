@@ -78,7 +78,7 @@ export const FindJourneys = ({
   return (
     <>
       <form onSubmit={handleFindJourneySubmit} className="space-y-4">
-        <div>
+        <div className="w-[95%]">
           <label
             htmlFor="departureDateFrom"
             className="block text-sm font-medium text-gray-700 mb-1"
@@ -95,8 +95,7 @@ export const FindJourneys = ({
             className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
           />
         </div>
-
-        <div>
+        <div className="w-[95%]">
           <label
             htmlFor="departureDateTo"
             className="block text-sm font-medium text-gray-700 mb-1"
@@ -113,75 +112,73 @@ export const FindJourneys = ({
             className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
           />
         </div>
-
-        <div className="flex items-center">
-          <div className="flex flex-col gap-4 w-5/6">
-            <div>
-              <label
-                htmlFor="origin"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Origin:
-              </label>
-              <select
-                id="origin"
-                name="origin"
-                value={formData.origin}
-                onChange={handleChange}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-              >
-                <option value="" disabled>
-                  Select an origin
+        <div className="flex flex-col gap-2 w-[95%]">
+          <div>
+            <label
+              htmlFor="origin"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Origin:
+            </label>
+            <select
+              id="origin"
+              name="origin"
+              value={formData.origin}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+            >
+              <option value="" disabled>
+                Select an origin
+              </option>
+              {(airports || []).map((airport) => (
+                <option key={airport.code} value={airport.code}>
+                  {airport.name} ({airport.code})
                 </option>
-                {(airports || []).map((airport) => (
+              ))}
+            </select>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleSwitch}
+            className="h-[0px] translate-x-full"
+          >
+            <Image
+              src="/vertical-switch.svg"
+              width={24}
+              height={24}
+              alt="Switch origin and destination"
+            />
+          </button>
+
+          <div>
+            <label
+              htmlFor="destination"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Destination:
+            </label>
+            <select
+              id="destination"
+              name="destination"
+              value={formData.destination}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+            >
+              <option value="" disabled>
+                Select a destination
+              </option>
+              {(airports || [])
+                .filter((airport) => airport.code !== formData.origin)
+                .map((airport) => (
                   <option key={airport.code} value={airport.code}>
                     {airport.name} ({airport.code})
                   </option>
                 ))}
-              </select>
-            </div>
-
-            <div>
-              <label
-                htmlFor="destination"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Destination:
-              </label>
-              <select
-                id="destination"
-                name="destination"
-                value={formData.destination}
-                onChange={handleChange}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-              >
-                <option value="" disabled>
-                  Select a destination
-                </option>
-                {(airports || [])
-                  .filter((airport) => airport.code !== formData.origin)
-                  .map((airport) => (
-                    <option key={airport.code} value={airport.code}>
-                      {airport.name} ({airport.code})
-                    </option>
-                  ))}
-              </select>
-            </div>
+            </select>
           </div>
-          <button
-            type="button"
-            onClick={handleSwitch}
-            className="w-[32px] h-[32px] ml-4"
-          >
-            <Image
-              src="/vertical-switch.svg"
-              width={32}
-              height={32}
-              alt="Switch origin and destination"
-            />
-          </button>
         </div>
 
         <button
