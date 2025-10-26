@@ -1,6 +1,6 @@
 import App from "./App";
 import { fetchAirports } from "./serverActions";
-import { Error } from "./Error";
+import { Notification } from "./Notification";
 
 export default async function Page() {
   const airports = await fetchAirports();
@@ -8,7 +8,7 @@ export default async function Page() {
   return airports ? (
     <App airports={airports} />
   ) : (
-    <Error
+    <Notification
       error="Something went wrong when looking for airports"
       className="bg-white"
     />

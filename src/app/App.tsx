@@ -13,7 +13,8 @@ import { JourneyList } from "./JourneyList";
 import { getPrice } from "./serverActions";
 import { getJourneyId } from "./utils";
 import { SelectCurrency } from "./SelectCurrency";
-import { Error } from "./Error";
+import { Notification } from "./Notification";
+import ErrorBoundary from "./ErrorBoundary";
 
 function App({ airports }: { airports: Airport[] }) {
   const [journeys, setJourneys] = useState<Journey[] | null>(null);
@@ -72,27 +73,29 @@ function App({ airports }: { airports: Airport[] }) {
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-gray-100 shadow-md rounded-lg bg-white">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Find Flights</h1>
-      <FindJourneys
-        airports={airports}
-        setJourneyPriceMap={setJourneyPriceMap}
-        setJourneys={setJourneys}
-        onJourneysFound={handleJourneysFound}
-      />
-      <JourneyList
-        journeyPriceMap={journeyPriceMap}
-        journeys={journeys}
-        selectedCurrency={currency}
-        handleGetPrice={handleGetPrice}
-        loadingPrices={loadingPrices}
-        resultRef={journeyResultRef}
-      />
-      <SelectCurrency
-        setSelectedCurrency={setSelectedCurrency}
-        journeyPriceMap={journeyPriceMap}
-        journeys={journeys}
-        handleGetPrice={handleGetPrice}
-      />
-      <Error error={error} />
+      <ErrorBoundary>
+        <FindJourneys
+          airports={airports}
+          setJourneyPriceMap={setJourneyPriceMap}
+          setJourneys={setJourneys}
+          onJourneysFound={handleJourneysFound}
+        />
+        <JourneyList
+          journeyPriceMap={journeyPriceMap}
+          journeys={journeys}
+          selectedCurrency={currency}
+          handleGetPrice={handleGetPrice}
+          loadingPrices={loadingPrices}
+          resultRef={journeyResultRef}
+        />
+        <SelectCurrency
+          setSelectedCurrency={setSelectedCurrency}
+          journeyPriceMap={journeyPriceMap}
+          journeys={journeys}
+          handleGetPrice={handleGetPrice}
+        />
+        <Notification error={error} />
+      </ErrorBoundary>
     </div>
   );
 }

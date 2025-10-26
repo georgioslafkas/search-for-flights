@@ -3,7 +3,7 @@ import { findJourneys } from "./serverActions";
 import { getJourneyId } from "./utils";
 import { Airport, FormData, Journey } from "./types";
 import { Spinner } from "./Spinner";
-import { Error } from "./Error";
+import { Notification } from "./Notification";
 import Image from "next/image";
 
 type Props = {
@@ -189,7 +189,7 @@ export const FindJourneys = ({
         </button>
       </form>
       {searchingJourneys && <Spinner size={64} className="mx-auto mt-6" />}
-      <Error error={error} />
+      <Notification error={error} />
     </>
   );
 };

@@ -1,4 +1,4 @@
-export const Error = ({
+export const Notification = ({
   error,
   className,
 }: {
