@@ -40,7 +40,8 @@ export const JourneyItem = ({
     >
       <div className="mb-2 font-medium">
         <p>
-          Flights: {journey.flights.length} | Total Duration: {journey.duration}
+          Flights: {journey.flights.length} | Total Duration: {journey.duration}{" "}
+          hrs
         </p>
         <p>Departure: {new Date(journey.departureDateTime).toLocaleString()}</p>
         <p>Arrival: {new Date(journey.arrivalDateTime).toLocaleString()}</p>
