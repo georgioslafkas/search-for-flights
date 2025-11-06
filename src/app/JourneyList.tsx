@@ -27,7 +27,7 @@ export const JourneyList = ({
       <>
         <div
           ref={resultRef as React.RefObject<HTMLDivElement>}
-          className="flex justify-center items-center flex-col mt-4 mb-4 border-2 border-dashed"
+          className="flex justify-center items-center flex-col mt-4 mb-4 border-2 border-dashed text-white"
         >
           No journeys found
           <Image

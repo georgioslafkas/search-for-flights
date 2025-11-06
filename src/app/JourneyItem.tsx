@@ -28,17 +28,23 @@ export const JourneyItem = ({
   const showPrice = Boolean(journeyPriceMap.get(id)) && !loadingPrices.get(id);
   const showSpinner =
     (journeyPriceMap.get(id) || loadingPrices.get(id)) && !showPrice;
-  const disabled = loadingPrices.get(id) || Boolean(journeyPriceMap.get(id)); // button will only be clicked once, after that the only change may come from currency update
+  const hideButton = loadingPrices.get(id) || Boolean(journeyPriceMap.get(id)); // button will only be clicked once, after that the only change may come from currency update
 
   return (
-    <li className="p-4 border rounded-lg shadow-sm">
+    <li
+      className="p-4 border border-sky-300 
+    rounded-2xl bg-white 
+    shadow-[0_10px_25px_rgba(15,23,42,0.45)] 
+    hover:-translate-y-1 hover:scale-[1.01]
+    transition-all duration-300"
+    >
       <div className="mb-2 font-medium">
         <p>
           Flights: {journey.flights.length} | Total Duration: {journey.duration}
         </p>
         <p>Departure: {new Date(journey.departureDateTime).toLocaleString()}</p>
         <p>Arrival: {new Date(journey.arrivalDateTime).toLocaleString()}</p>
-        <ul className="space-y-2">
+        <ul>
           {journey.flights.map((leg: Flight, legIndex: number) => (
             <li key={legIndex} className="pl-2">
               <p>
@@ -65,18 +71,22 @@ export const JourneyItem = ({
           ))}
         </ul>
       </div>
-      <button
-        className="mt-2 bg-sky-800 hover:bg-sky-900 text-white px-3 py-1 rounded-lg"
-        onClick={() => handleGetPrice(journey, selectedCurrency.label)}
-        disabled={disabled}
-      >
-        Get Price
-      </button>
-
-      <p className="mt-2 text-gray-800 font-semibold min-h-6">
-        {showPrice && price}
-        {showSpinner && <Spinner size={24} />}
-      </p>
+      <div className="flex flex-col items-end">
+        {!hideButton && (
+          <button
+            className="bg-sky-800 hover:bg-sky-900 text-white px-3 py-1 rounded-lg size-fit"
+            onClick={() => handleGetPrice(journey, selectedCurrency.label)}
+          >
+            Get Price
+          </button>
+        )}
+        {showSpinner && <Spinner size={32} />}
+        {showPrice && (
+          <p className="text-gray-800 font-semibold min-h-6 size-fit text-2xl">
+            {price}
+          </p>
+        )}
+      </div>
     </li>
   );
 };

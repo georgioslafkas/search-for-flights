@@ -31,8 +31,14 @@ export const SelectCurrency = ({
 
   return (
     <div className="flex justify-center mt-4">
-      Show prices in:{" "}
-      <select onChange={handleChangeCurrency}>
+      <label htmlFor="select-currency" className="text-white mr-2">
+        Show prices in:{" "}
+      </label>
+      <select
+        id="select-currency"
+        className="rounded-md"
+        onChange={handleChangeCurrency}
+      >
         {Object.values(currencies).map((currency) => (
           <option key={currency.label} value={JSON.stringify(currency)}>
             {currency.label}

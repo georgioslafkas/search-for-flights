@@ -77,7 +77,11 @@ export const FindJourneys = ({
 
   return (
     <>
-      <form onSubmit={handleFindJourneySubmit} className="space-y-4">
+      <form
+        onSubmit={handleFindJourneySubmit}
+        className="space-y-4 bg-white p-6 rounded-lg shadow-[0_10px_25px_rgba(15,23,42,0.45)]"
+      >
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Find Flights</h1>
         <div className="w-[95%]">
           <label
             htmlFor="departureDateFrom"
@@ -188,7 +192,9 @@ export const FindJourneys = ({
           Find
         </button>
       </form>
-      {searchingJourneys && <Spinner size={64} className="mx-auto mt-6" />}
+      {searchingJourneys && (
+        <Spinner size={64} color="#fff" className="mx-auto mt-6" />
+      )}
       <Notification error={error} />
     </>
   );
