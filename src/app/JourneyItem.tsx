@@ -12,6 +12,7 @@ type Props = {
     journey: Journey,
     currency: Currency["label"]
   ) => Promise<void>;
+  className?: string;
 };
 
 export const JourneyItem = ({
@@ -20,6 +21,7 @@ export const JourneyItem = ({
   selectedCurrency,
   handleGetPrice,
   loadingPrices,
+  className,
 }: Props) => {
   const id = getJourneyId(journey);
   const price = `${journeyPriceMap.get(id)?.toFixed(2)}${
@@ -32,11 +34,11 @@ export const JourneyItem = ({
 
   return (
     <li
-      className="p-4 border border-sky-300 
+      className={`p-4 border border-sky-300 
     rounded-2xl bg-white 
     shadow-[0_10px_25px_rgba(15,23,42,0.45)] 
     hover:-translate-y-1 hover:scale-[1.01]
-    transition-all duration-300"
+    transition-all duration-300 ${className}`}
     >
       <div className="mb-2 font-medium">
         <p>

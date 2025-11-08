@@ -1,6 +1,7 @@
 import { Currency, Journey } from "./types";
 import { JourneyItem } from "./JourneyItem";
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 
 type Props = {
   journeyPriceMap: Map<string, number>;
@@ -22,6 +23,20 @@ export const JourneyList = ({
   loadingPrices,
   resultRef,
 }: Props) => {
+  const previousJourneysRef = useRef<Journey[]>([]);
+
+  useEffect(() => {
+    // Trigger animation when new results appear
+    if (journeys?.length && journeys !== previousJourneysRef.current) {
+      const items = document.querySelectorAll(".journey-item");
+      items.forEach((el, i) => {
+        (el as HTMLElement).style.animationDelay = `${i * 100}ms`;
+        el.classList.add("animate-fade-in-up");
+      });
+      previousJourneysRef.current = journeys;
+    }
+  }, [journeys]);
+
   if (journeys !== null && journeys.length === 0) {
     return (
       <>
@@ -55,6 +70,7 @@ export const JourneyList = ({
           key={index}
           handleGetPrice={handleGetPrice}
           loadingPrices={loadingPrices}
+          className="journey-item opacity-0 p-4 border rounded-xl bg-white shadow-md"
         />
       ))}
     </ul>
