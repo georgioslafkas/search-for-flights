@@ -71,7 +71,7 @@ function App({ airports }: { airports: Airport[] }) {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10">
+    <div className="max-w-lg mx-auto mt-10 mb-10">
       <ErrorBoundary>
         <FindJourneys
           airports={airports}
