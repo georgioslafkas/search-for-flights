@@ -4,21 +4,6 @@ import endpoints from "@/app/endpoints";
 import { Currency, Fare, FareWapper, FormData, Journey } from "@/app/types";
 import { buildFareUrl, buildJourneyUrlPath } from "@/app/utils";
 
-export async function fetchAirports() {
-  const res = await fetch(endpoints.URL_AIRPORTS, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-    cache: "no-store", // always fresh
-  });
-
-  if (!res.ok) {
-    console.error("Failed to fetch airports:", res.statusText);
-    return [];
-  }
-
-  return res.json();
-}
-
 export async function findJourneys(formData: FormData): Promise<Journey[]> {
   const path = buildJourneyUrlPath(formData);
   const requestURL = `${endpoints.URL_JOURNEYS}/${path}`;
