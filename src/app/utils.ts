@@ -13,7 +13,9 @@ export function buildJourneyUrlPath(params: FormData): string {
     filteredParams as Record<string, string>
   ).toString();
 
-  return `${path}?${queryParams}`;
+  const layoverParams = "layoverFrom=1&layoverTo=12";
+
+  return `${path}?${queryParams}&${layoverParams}`;
 }
 
 export function getJourneyId(journey: Journey): string {
