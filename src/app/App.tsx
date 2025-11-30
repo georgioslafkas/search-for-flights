@@ -10,11 +10,11 @@ import {
 } from "@/app/types";
 import { FindJourneys } from "./FindJourneys";
 import { JourneyList } from "./JourneyList";
-import { getPrice } from "./serverActions";
 import { getJourneyId } from "./utils";
 import { SelectCurrency } from "./SelectCurrency";
 import { Notification } from "./Notification";
 import ErrorBoundary from "./ErrorBoundary";
+import { usePriceFetcher } from "./hooks";
 
 function App({ airports }: { airports: Airport[] }) {
   const [journeys, setJourneys] = useState<Journey[] | null>(null);
@@ -26,7 +26,8 @@ function App({ airports }: { airports: Airport[] }) {
     new Map()
   );
   const journeyResultRef = useRef<HTMLUListElement | HTMLDivElement>(null);
-  const [error, setError] = useState<string | null>(null);
+
+  const { trigger, error } = usePriceFetcher();
 
   const handleGetPrice = async (
     journey: Journey,
@@ -40,17 +41,16 @@ function App({ airports }: { airports: Airport[] }) {
     setLoadingPrices(newLoadingMap);
 
     try {
-      setError(null);
-      const price = await getPrice(journey, currency);
-      const newPriceMap = new Map(journeyPriceMap);
-      newPriceMap.set(id, price);
+      const result = await trigger({
+        journey,
+        currency,
+      });
       setJourneyPriceMap((prevMap) => {
         const newMap = new Map(prevMap);
-        newMap.set(id, price);
+        newMap.set(id, result.price);
         return newMap;
       });
     } catch (err) {
-      setError(`Something went wrong when getting the price of the trip`);
       console.error("Error fetching price:", err);
     } finally {
       const updatedLoadingMap = new Map(loadingPrices);
