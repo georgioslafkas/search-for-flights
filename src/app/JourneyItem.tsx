@@ -1,7 +1,10 @@
+import { useState } from "react";
+import { usePrice } from "./hooks";
 import { Spinner } from "./Spinner";
 import { Currency, Flight, Journey } from "./types";
 import { getJourneyId, getBookingLink } from "./utils";
 import Image from "next/image";
+import { useSWRConfig } from "swr";
 
 type Props = {
   journeyPriceMap: Map<string, number>;
@@ -10,7 +13,7 @@ type Props = {
   loadingPrices: Map<string, boolean>;
   handleGetPrice: (
     journey: Journey,
-    currency: Currency["label"]
+    currency: Currency["label"],
   ) => Promise<void>;
   className?: string;
 };
@@ -31,6 +34,15 @@ export const JourneyItem = ({
   const showSpinner =
     (journeyPriceMap.get(id) || loadingPrices.get(id)) && !showPrice;
   const hideButton = loadingPrices.get(id) || Boolean(journeyPriceMap.get(id)); // button will only be clicked once, after that the only change may come from currency update
+
+  const [enabled, setEnabled] = useState(false);
+
+  const { data, isLoading } = usePrice(journey, id, selectedCurrency, enabled);
+
+  const handleGetPrice2 = () => setEnabled(true);
+
+  const { cache } = useSWRConfig();
+  console.log(cache);
 
   return (
     <li
@@ -78,7 +90,7 @@ export const JourneyItem = ({
         {!hideButton && (
           <button
             className="bg-sky-800 hover:bg-sky-900 text-white px-3 py-1 rounded-lg size-fit"
-            onClick={() => handleGetPrice(journey, selectedCurrency.label)}
+            onClick={handleGetPrice2}
           >
             Get Price
           </button>

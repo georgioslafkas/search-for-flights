@@ -14,54 +14,54 @@ import { getJourneyId } from "./utils";
 import { SelectCurrency } from "./SelectCurrency";
 import { Notification } from "./Notification";
 import ErrorBoundary from "./ErrorBoundary";
-import { usePriceFetcher } from "./hooks";
+// import { usePriceFetcher } from "./hooks";
 
 function App({ airports }: { airports: Airport[] }) {
   const [journeys, setJourneys] = useState<Journey[] | null>(null);
   const [journeyPriceMap, setJourneyPriceMap] = useState<JourneyPriceMap>(
-    new Map()
+    new Map(),
   );
   const [currency, setSelectedCurrency] = useState<Currency>(currencies.EUR);
   const [loadingPrices, setLoadingPrices] = useState<Map<string, boolean>>(
-    new Map()
+    new Map(),
   );
   const journeyResultRef = useRef<HTMLUListElement | HTMLDivElement>(null);
 
-  const { trigger, error } = usePriceFetcher();
+  // const { trigger, error } = usePriceFetcher();
 
-  const handleGetPrice = async (
-    journey: Journey,
-    currency: Currency["label"]
-  ) => {
-    const id = getJourneyId(journey);
+  // const handleGetPrice = async (
+  //   journey: Journey,
+  //   currency: Currency["label"],
+  // ) => {
+  //   const id = getJourneyId(journey);
 
-    // mark this journey as loading
-    const newLoadingMap = new Map(loadingPrices);
-    newLoadingMap.set(id, true);
-    setLoadingPrices(newLoadingMap);
+  //   // mark this journey as loading
+  //   const newLoadingMap = new Map(loadingPrices);
+  //   newLoadingMap.set(id, true);
+  //   setLoadingPrices(newLoadingMap);
 
-    try {
-      const result = await trigger({
-        journey,
-        currency,
-      });
-      setJourneyPriceMap((prevMap) => {
-        const newMap = new Map(prevMap);
-        newMap.set(id, result.price);
-        return newMap;
-      });
-    } catch (err) {
-      console.error("Error fetching price:", err);
-    } finally {
-      const updatedLoadingMap = new Map(loadingPrices);
-      updatedLoadingMap.set(id, false);
-      setLoadingPrices((prev) => {
-        const newMap = new Map(prev);
-        newMap.set(id, false);
-        return newMap;
-      });
-    }
-  };
+  //   try {
+  //     const result = await trigger({
+  //       journey,
+  //       currency,
+  //     });
+  //     setJourneyPriceMap((prevMap) => {
+  //       const newMap = new Map(prevMap);
+  //       newMap.set(id, result.price);
+  //       return newMap;
+  //     });
+  //   } catch (err) {
+  //     console.error("Error fetching price:", err);
+  //   } finally {
+  //     const updatedLoadingMap = new Map(loadingPrices);
+  //     updatedLoadingMap.set(id, false);
+  //     setLoadingPrices((prev) => {
+  //       const newMap = new Map(prev);
+  //       newMap.set(id, false);
+  //       return newMap;
+  //     });
+  //   }
+  // };
 
   const handleJourneysFound = (newJourneys: Journey[]) => {
     setJourneys(newJourneys);
@@ -83,7 +83,7 @@ function App({ airports }: { airports: Airport[] }) {
           journeyPriceMap={journeyPriceMap}
           journeys={journeys}
           selectedCurrency={currency}
-          handleGetPrice={handleGetPrice}
+          handleGetPrice={() => ({})}
           loadingPrices={loadingPrices}
           resultRef={journeyResultRef}
         />
@@ -91,9 +91,9 @@ function App({ airports }: { airports: Airport[] }) {
           setSelectedCurrency={setSelectedCurrency}
           journeyPriceMap={journeyPriceMap}
           journeys={journeys}
-          handleGetPrice={handleGetPrice}
+          handleGetPrice={() => ({})}
         />
-        <Notification error={error} />
+        <Notification error={undefined} />
       </ErrorBoundary>
     </div>
   );
