@@ -11,10 +11,6 @@ type Props = {
   selectedCurrency: Currency;
   journey: Journey;
   loadingPrices: Map<string, boolean>;
-  handleGetPrice: (
-    journey: Journey,
-    currency: Currency["label"],
-  ) => Promise<void>;
   className?: string;
 };
 
@@ -22,7 +18,6 @@ export const JourneyItem = ({
   journey,
   journeyPriceMap,
   selectedCurrency,
-  handleGetPrice,
   loadingPrices,
   className,
 }: Props) => {
@@ -39,10 +34,10 @@ export const JourneyItem = ({
 
   const { data, isLoading } = usePrice(journey, id, selectedCurrency, enabled);
 
-  const handleGetPrice2 = () => setEnabled(true);
+  const handleGetPrice = () => setEnabled(true);
 
   const { cache } = useSWRConfig();
-  console.log(cache);
+  console.log(cache.keys().next().value); // Log the first key in the cache to verify it's being set
 
   return (
     <li
@@ -90,7 +85,7 @@ export const JourneyItem = ({
         {!hideButton && (
           <button
             className="bg-sky-800 hover:bg-sky-900 text-white px-3 py-1 rounded-lg size-fit"
-            onClick={handleGetPrice2}
+            onClick={handleGetPrice}
           >
             Get Price
           </button>

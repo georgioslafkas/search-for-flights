@@ -10,11 +10,9 @@ import {
 } from "@/app/types";
 import { FindJourneys } from "./FindJourneys";
 import { JourneyList } from "./JourneyList";
-import { getJourneyId } from "./utils";
 import { SelectCurrency } from "./SelectCurrency";
 import { Notification } from "./Notification";
 import ErrorBoundary from "./ErrorBoundary";
-// import { usePriceFetcher } from "./hooks";
 
 function App({ airports }: { airports: Airport[] }) {
   const [journeys, setJourneys] = useState<Journey[] | null>(null);
@@ -26,42 +24,6 @@ function App({ airports }: { airports: Airport[] }) {
     new Map(),
   );
   const journeyResultRef = useRef<HTMLUListElement | HTMLDivElement>(null);
-
-  // const { trigger, error } = usePriceFetcher();
-
-  // const handleGetPrice = async (
-  //   journey: Journey,
-  //   currency: Currency["label"],
-  // ) => {
-  //   const id = getJourneyId(journey);
-
-  //   // mark this journey as loading
-  //   const newLoadingMap = new Map(loadingPrices);
-  //   newLoadingMap.set(id, true);
-  //   setLoadingPrices(newLoadingMap);
-
-  //   try {
-  //     const result = await trigger({
-  //       journey,
-  //       currency,
-  //     });
-  //     setJourneyPriceMap((prevMap) => {
-  //       const newMap = new Map(prevMap);
-  //       newMap.set(id, result.price);
-  //       return newMap;
-  //     });
-  //   } catch (err) {
-  //     console.error("Error fetching price:", err);
-  //   } finally {
-  //     const updatedLoadingMap = new Map(loadingPrices);
-  //     updatedLoadingMap.set(id, false);
-  //     setLoadingPrices((prev) => {
-  //       const newMap = new Map(prev);
-  //       newMap.set(id, false);
-  //       return newMap;
-  //     });
-  //   }
-  // };
 
   const handleJourneysFound = (newJourneys: Journey[]) => {
     setJourneys(newJourneys);
@@ -83,7 +45,6 @@ function App({ airports }: { airports: Airport[] }) {
           journeyPriceMap={journeyPriceMap}
           journeys={journeys}
           selectedCurrency={currency}
-          handleGetPrice={() => ({})}
           loadingPrices={loadingPrices}
           resultRef={journeyResultRef}
         />
@@ -93,7 +54,7 @@ function App({ airports }: { airports: Airport[] }) {
           journeys={journeys}
           handleGetPrice={() => ({})}
         />
-        <Notification error={undefined} />
+        <Notification error={null} />
       </ErrorBoundary>
     </div>
   );

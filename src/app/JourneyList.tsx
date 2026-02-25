@@ -8,10 +8,6 @@ type Props = {
   journeys: Journey[] | null;
   selectedCurrency: Currency;
   loadingPrices: Map<string, boolean>;
-  handleGetPrice: (
-    journey: Journey,
-    currency: Currency["label"]
-  ) => Promise<void>;
   resultRef: React.RefObject<HTMLUListElement | HTMLDivElement>;
 };
 
@@ -19,7 +15,6 @@ export const JourneyList = ({
   journeyPriceMap,
   journeys,
   selectedCurrency,
-  handleGetPrice,
   loadingPrices,
   resultRef,
 }: Props) => {
@@ -68,7 +63,6 @@ export const JourneyList = ({
           selectedCurrency={selectedCurrency}
           journey={journey}
           key={index}
-          handleGetPrice={handleGetPrice}
           loadingPrices={loadingPrices}
           className="journey-item opacity-0 p-4 border rounded-xl bg-white shadow-md"
         />

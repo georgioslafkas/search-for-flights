@@ -7,7 +7,7 @@ type Props = {
   journeys: Journey[] | null;
   handleGetPrice: (
     journey: Journey,
-    currency: Currency["label"]
+    currency: Currency["label"],
   ) => Promise<void>;
 };
 
@@ -18,7 +18,7 @@ export const SelectCurrency = ({
   handleGetPrice,
 }: Props) => {
   const handleChangeCurrency = async (
-    e: React.ChangeEvent<HTMLSelectElement>
+    e: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const currency = JSON.parse(e.target.value);
     const journeysToUpdate =

@@ -1,16 +1,5 @@
-import useSWRMutation from "swr/mutation";
-import { fetcher } from "./lib/fetcher";
-import { Currency, Journey, PricePayload } from "./types";
-
-// export function usePriceFetcher() {
-//   const { trigger, data, error, isMutating } = useSWRMutation(
-//     "/api/price",
-//     (url, { arg }: { arg: PricePayload }) => fetcher(url, arg)
-//   );
-
-//   return { trigger, data, error, isMutating };
-// }
 import useSWR from "swr";
+import { Currency, Journey } from "./types";
 
 export function usePrice(
   journey: Journey,
@@ -18,13 +7,27 @@ export function usePrice(
   currency: Currency,
   enabled: boolean,
 ) {
-  const journeyString = JSON.stringify(journey);
+  const key = enabled ? ["price", id, currency.label] : null;
 
-  const query = enabled
-    ? `/api/price?id=${id}&currency=${currency.label}&journey=${encodeURIComponent(
-        journeyString,
-      )}`
-    : null;
+  return useSWR(
+    key,
+    async ([_, id, currency]) => {
+      const res = await fetch("/api/price", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id,
+          currency,
+          journey,
+        }),
+      });
 
-  return useSWR(query, fetcher);
+      return res.json();
+    },
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
+      revalidateOnReconnect: false,
+    },
+  );
 }
