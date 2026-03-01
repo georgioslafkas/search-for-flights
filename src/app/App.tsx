@@ -16,9 +16,7 @@ import ErrorBoundary from "./ErrorBoundary";
 
 function App({ airports }: { airports: Airport[] }) {
   const [journeys, setJourneys] = useState<Journey[] | null>(null);
-  const [journeyPriceMap, setJourneyPriceMap] = useState<JourneyPriceMap>(
-    new Map(),
-  );
+  const [_, setJourneyPriceMap] = useState<JourneyPriceMap>(new Map());
   const [currency, setSelectedCurrency] = useState<Currency>(currencies.EUR);
   const journeyResultRef = useRef<HTMLUListElement | HTMLDivElement>(null);
 
@@ -43,12 +41,7 @@ function App({ airports }: { airports: Airport[] }) {
           selectedCurrency={currency}
           resultRef={journeyResultRef}
         />
-        <SelectCurrency
-          setSelectedCurrency={setSelectedCurrency}
-          journeyPriceMap={journeyPriceMap}
-          journeys={journeys}
-          handleGetPrice={() => ({})}
-        />
+        <SelectCurrency setSelectedCurrency={setSelectedCurrency} />
         <Notification error={null} />
       </ErrorBoundary>
     </div>

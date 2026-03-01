@@ -1,31 +1,14 @@
-import { currencies, Currency, Journey, JourneyPriceMap } from "./types";
-import { getJourneysWithPrice } from "./utils";
+import { currencies, Currency } from "./types";
 
 type Props = {
   setSelectedCurrency: React.Dispatch<React.SetStateAction<Currency>>;
-  journeyPriceMap: JourneyPriceMap;
-  journeys: Journey[] | null;
-  handleGetPrice: (
-    journey: Journey,
-    currency: Currency["label"],
-  ) => Promise<void>;
 };
 
-export const SelectCurrency = ({
-  setSelectedCurrency,
-  journeyPriceMap,
-  journeys,
-  handleGetPrice,
-}: Props) => {
+export const SelectCurrency = ({ setSelectedCurrency }: Props) => {
   const handleChangeCurrency = async (
     e: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const currency = JSON.parse(e.target.value);
-    const journeysToUpdate =
-      getJourneysWithPrice(journeyPriceMap, journeys) || [];
-    for (const journey of journeysToUpdate) {
-      await handleGetPrice(journey, currency.label);
-    }
     setSelectedCurrency(currency);
   };
 
