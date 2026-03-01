@@ -1,7 +1,6 @@
 import useSWR, { SWRResponse } from "swr";
 import { Currency, Journey, PriceData } from "./types";
-import endpoints from "./endpoints";
-import { buildJourneyUrlPath } from "./utils";
+import { FormData } from "./types";
 
 export function usePrice(
   journey: Journey,
@@ -34,17 +33,8 @@ export function usePrice(
   );
 }
 
-export function useJourneys(
-  formData: {
-    departureDateFrom: string;
-    departureDateTo: string;
-    origin: string;
-    destination: string;
-  },
-  enabled: boolean,
-): SWRResponse<Journey[]> {
-  const formDataString = JSON.stringify(formData);
-  const key = enabled ? ["journeys", formDataString] : null;
+export function useJourneys(formData: FormData | null): SWRResponse<Journey[]> {
+  const key = formData ? ["journeys", JSON.stringify(formData)] : null;
 
   return useSWR(
     key,

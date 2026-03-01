@@ -4,13 +4,14 @@ import endpoints from "./endpoints";
 export function buildJourneyUrlPath(params: FormData): string {
   const filteredParams = Object.fromEntries(
     Object.entries(params).filter(
-      ([key, value]) => !["origin", "destination"].includes(key) && value !== ""
-    )
+      ([key, value]) =>
+        !["origin", "destination"].includes(key) && value !== "",
+    ),
   );
 
   const path = `${params.origin}/${params.destination}`;
   const queryParams = new URLSearchParams(
-    filteredParams as Record<string, string>
+    filteredParams as Record<string, string>,
   ).toString();
 
   const layoverParams = "layoverFrom=1&layoverTo=12";
@@ -26,7 +27,7 @@ export function getJourneyId(journey: Journey): string {
 
 export function getJourneysWithPrice(
   journeyPriceMap: JourneyPriceMap,
-  journeys: Journey[] | null
+  journeys: Journey[] | null,
 ) {
   const journeysWithPriceKeys: string[] = [];
   journeyPriceMap.forEach((value, key) => {

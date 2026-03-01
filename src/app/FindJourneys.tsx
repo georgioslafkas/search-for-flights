@@ -23,25 +23,27 @@ export const FindJourneys = ({
     destination: "",
   });
 
-  const [enabled, setEnabled] = useState(false);
+  const [submittedForm, setSubmittedForm] = useState<FormData | null>(null);
 
   const {
     data: journeys,
     error,
     isLoading: searchingJourneys,
-  } = useJourneys(formData, enabled);
+  } = useJourneys(submittedForm);
 
-  const handleFindJourneySubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-  ) => {
+  const handleFindJourneySubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    try {
-      setJourneys(null);
-      setEnabled(true);
-    } catch {
-      setJourneys([]);
+    if (
+      submittedForm?.departureDateFrom === formData.departureDateFrom &&
+      submittedForm?.departureDateTo === formData.departureDateTo &&
+      submittedForm?.origin === formData.origin &&
+      submittedForm?.destination === formData.destination
+    ) {
+      return;
     }
+
+    setJourneys(null);
+    setSubmittedForm(formData);
   };
 
   const handleChange = (
@@ -70,7 +72,6 @@ export const FindJourneys = ({
     if (journeys) {
       setJourneys(journeys);
       onJourneysFound(journeys);
-      setEnabled(false);
     }
   }, [journeys]);
 
