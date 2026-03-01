@@ -1,13 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import {
-  Journey,
-  Airport,
-  currencies,
-  Currency,
-  JourneyPriceMap,
-} from "@/app/types";
+import { Journey, Airport, currencies, Currency } from "@/app/types";
 import { FindJourneys } from "./FindJourneys";
 import { JourneyList } from "./JourneyList";
 import { SelectCurrency } from "./SelectCurrency";
@@ -16,7 +10,6 @@ import ErrorBoundary from "./ErrorBoundary";
 
 function App({ airports }: { airports: Airport[] }) {
   const [journeys, setJourneys] = useState<Journey[] | null>(null);
-  const [_, setJourneyPriceMap] = useState<JourneyPriceMap>(new Map());
   const [currency, setSelectedCurrency] = useState<Currency>(currencies.EUR);
   const journeyResultRef = useRef<HTMLUListElement | HTMLDivElement>(null);
 
@@ -32,7 +25,6 @@ function App({ airports }: { airports: Airport[] }) {
       <ErrorBoundary>
         <FindJourneys
           airports={airports}
-          setJourneyPriceMap={setJourneyPriceMap}
           setJourneys={setJourneys}
           onJourneysFound={handleJourneysFound}
         />

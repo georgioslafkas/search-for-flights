@@ -18,7 +18,7 @@ export const JourneyList = ({
 
   useEffect(() => {
     // Trigger animation when new results appear
-    if (journeys?.length && journeys !== previousJourneysRef.current) {
+    if (journeys?.length) {
       const items = document.querySelectorAll(".journey-item");
       items.forEach((el, i) => {
         (el as HTMLElement).style.animationDelay = `${i * 100}ms`;
