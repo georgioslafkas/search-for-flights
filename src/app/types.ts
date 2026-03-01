@@ -84,3 +84,8 @@ export type PricePayload = {
   journey: Journey;
   currency: Currency["label"];
 };
+
+export type PriceData = {
+  id: string;
+  price: number;
+};

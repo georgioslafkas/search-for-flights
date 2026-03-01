@@ -4,18 +4,14 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 type Props = {
-  journeyPriceMap: Map<string, number>;
   journeys: Journey[] | null;
   selectedCurrency: Currency;
-  loadingPrices: Map<string, boolean>;
   resultRef: React.RefObject<HTMLUListElement | HTMLDivElement>;
 };
 
 export const JourneyList = ({
-  journeyPriceMap,
   journeys,
   selectedCurrency,
-  loadingPrices,
   resultRef,
 }: Props) => {
   const previousJourneysRef = useRef<Journey[]>([]);
@@ -59,11 +55,9 @@ export const JourneyList = ({
     >
       {(journeys || []).map((journey, index) => (
         <JourneyItem
-          journeyPriceMap={journeyPriceMap}
           selectedCurrency={selectedCurrency}
           journey={journey}
           key={index}
-          loadingPrices={loadingPrices}
           className="journey-item opacity-0 p-4 border rounded-xl bg-white shadow-md"
         />
       ))}

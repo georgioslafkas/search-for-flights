@@ -20,9 +20,6 @@ function App({ airports }: { airports: Airport[] }) {
     new Map(),
   );
   const [currency, setSelectedCurrency] = useState<Currency>(currencies.EUR);
-  const [loadingPrices, setLoadingPrices] = useState<Map<string, boolean>>(
-    new Map(),
-  );
   const journeyResultRef = useRef<HTMLUListElement | HTMLDivElement>(null);
 
   const handleJourneysFound = (newJourneys: Journey[]) => {
@@ -42,10 +39,8 @@ function App({ airports }: { airports: Airport[] }) {
           onJourneysFound={handleJourneysFound}
         />
         <JourneyList
-          journeyPriceMap={journeyPriceMap}
           journeys={journeys}
           selectedCurrency={currency}
-          loadingPrices={loadingPrices}
           resultRef={journeyResultRef}
         />
         <SelectCurrency

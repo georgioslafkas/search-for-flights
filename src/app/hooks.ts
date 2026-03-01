@@ -1,12 +1,12 @@
-import useSWR from "swr";
-import { Currency, Journey } from "./types";
+import useSWR, { SWRResponse } from "swr";
+import { Currency, Journey, PriceData } from "./types";
 
 export function usePrice(
   journey: Journey,
   id: string,
   currency: Currency,
   enabled: boolean,
-) {
+): SWRResponse<PriceData> {
   const key = enabled ? ["price", id, currency.label] : null;
 
   return useSWR(

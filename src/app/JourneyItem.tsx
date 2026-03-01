@@ -4,40 +4,31 @@ import { Spinner } from "./Spinner";
 import { Currency, Flight, Journey } from "./types";
 import { getJourneyId, getBookingLink } from "./utils";
 import Image from "next/image";
-import { useSWRConfig } from "swr";
 
 type Props = {
-  journeyPriceMap: Map<string, number>;
   selectedCurrency: Currency;
   journey: Journey;
-  loadingPrices: Map<string, boolean>;
   className?: string;
 };
 
 export const JourneyItem = ({
   journey,
-  journeyPriceMap,
   selectedCurrency,
-  loadingPrices,
   className,
 }: Props) => {
   const id = getJourneyId(journey);
-  const price = `${journeyPriceMap.get(id)?.toFixed(2)}${
-    selectedCurrency.symbol
-  }`;
-  const showPrice = Boolean(journeyPriceMap.get(id)) && !loadingPrices.get(id);
-  const showSpinner =
-    (journeyPriceMap.get(id) || loadingPrices.get(id)) && !showPrice;
-  const hideButton = loadingPrices.get(id) || Boolean(journeyPriceMap.get(id)); // button will only be clicked once, after that the only change may come from currency update
 
   const [enabled, setEnabled] = useState(false);
 
-  const { data, isLoading } = usePrice(journey, id, selectedCurrency, enabled);
+  const { data: priceData, isLoading: fetchingPrice } = usePrice(
+    journey,
+    id,
+    selectedCurrency,
+    enabled,
+  );
+  const hideButton = fetchingPrice || priceData?.price; // button will only be clicked once, after that the only change may come from currency update
 
   const handleGetPrice = () => setEnabled(true);
-
-  const { cache } = useSWRConfig();
-  console.log(cache.keys().next().value); // Log the first key in the cache to verify it's being set
 
   return (
     <li
@@ -90,10 +81,10 @@ export const JourneyItem = ({
             Get Price
           </button>
         )}
-        {showSpinner && <Spinner size={32} />}
-        {showPrice && (
+        {fetchingPrice && <Spinner size={32} />}
+        {priceData && (
           <p className="text-gray-800 font-semibold min-h-6 size-fit text-2xl">
-            {price}
+            {priceData.price.toFixed(2)} {selectedCurrency.symbol}
           </p>
         )}
       </div>
