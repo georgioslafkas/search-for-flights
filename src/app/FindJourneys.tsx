@@ -1,21 +1,18 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { findJourneys } from "./serverActions";
-import { getJourneyId } from "./utils";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Airport, FormData, Journey } from "./types";
 import { Spinner } from "./Spinner";
 import { Notification } from "./Notification";
 import Image from "next/image";
+import { useJourneys } from "./hooks";
 
 type Props = {
   setJourneys: Dispatch<SetStateAction<Journey[] | null>>;
-  setJourneyPriceMap: Dispatch<SetStateAction<Map<string, number>>>;
   airports: Airport[];
   onJourneysFound: (journeys: Journey[]) => void;
 };
 
 export const FindJourneys = ({
   setJourneys,
-  setJourneyPriceMap,
   airports,
   onJourneysFound,
 }: Props) => {
@@ -25,36 +22,32 @@ export const FindJourneys = ({
     origin: "",
     destination: "",
   });
-  const [searchingJourneys, setSearchingJourneys] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const handleFindJourneySubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const [submittedForm, setSubmittedForm] = useState<FormData | null>(null);
+
+  const {
+    data: journeys,
+    error,
+    isLoading: searchingJourneys,
+  } = useJourneys(submittedForm);
+
+  const handleFindJourneySubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    try {
-      setJourneys(null);
-      setError(null);
-      setSearchingJourneys(true);
-      const journeys = await findJourneys(formData);
-      onJourneysFound(journeys);
-
-      // reset price map
-      const newMap = new Map();
-      journeys.forEach((j) => newMap.set(getJourneyId(j), 0));
-      setJourneyPriceMap(newMap);
-    } catch (err) {
-      console.error("Error fetching journeys:", err);
-      setJourneys([]);
-      setError(`Something went wrong when looking for journeys`);
-    } finally {
-      setSearchingJourneys(false);
+    if (
+      submittedForm?.departureDateFrom === formData.departureDateFrom &&
+      submittedForm?.departureDateTo === formData.departureDateTo &&
+      submittedForm?.origin === formData.origin &&
+      submittedForm?.destination === formData.destination
+    ) {
+      return;
     }
+
+    setJourneys(null);
+    setSubmittedForm(formData);
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -74,6 +67,13 @@ export const FindJourneys = ({
       origin: newOrigin,
     });
   };
+
+  useEffect(() => {
+    if (journeys) {
+      setJourneys(journeys);
+      onJourneysFound(journeys);
+    }
+  }, [journeys, setJourneys, onJourneysFound]);
 
   return (
     <>

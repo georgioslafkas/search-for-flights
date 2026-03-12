@@ -79,3 +79,13 @@ export const currencies = {
 export type Currency = (typeof currencies)[keyof typeof currencies];
 
 export type JourneyPriceMap = Map<string, number>;
+
+export type PricePayload = {
+  journey: Journey;
+  currency: Currency["label"];
+};
+
+export type PriceData = {
+  id: string;
+  price: number;
+};

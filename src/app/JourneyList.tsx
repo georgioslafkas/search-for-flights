@@ -4,30 +4,21 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 type Props = {
-  journeyPriceMap: Map<string, number>;
   journeys: Journey[] | null;
   selectedCurrency: Currency;
-  loadingPrices: Map<string, boolean>;
-  handleGetPrice: (
-    journey: Journey,
-    currency: Currency["label"]
-  ) => Promise<void>;
   resultRef: React.RefObject<HTMLUListElement | HTMLDivElement>;
 };
 
 export const JourneyList = ({
-  journeyPriceMap,
   journeys,
   selectedCurrency,
-  handleGetPrice,
-  loadingPrices,
   resultRef,
 }: Props) => {
   const previousJourneysRef = useRef<Journey[]>([]);
 
   useEffect(() => {
     // Trigger animation when new results appear
-    if (journeys?.length && journeys !== previousJourneysRef.current) {
+    if (journeys?.length) {
       const items = document.querySelectorAll(".journey-item");
       items.forEach((el, i) => {
         (el as HTMLElement).style.animationDelay = `${i * 100}ms`;
@@ -64,12 +55,9 @@ export const JourneyList = ({
     >
       {(journeys || []).map((journey, index) => (
         <JourneyItem
-          journeyPriceMap={journeyPriceMap}
           selectedCurrency={selectedCurrency}
           journey={journey}
           key={index}
-          handleGetPrice={handleGetPrice}
-          loadingPrices={loadingPrices}
           className="journey-item opacity-0 p-4 border rounded-xl bg-white shadow-md"
         />
       ))}

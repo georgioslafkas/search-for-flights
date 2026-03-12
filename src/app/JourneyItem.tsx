@@ -1,36 +1,34 @@
+import { useState } from "react";
+import { usePrice } from "./hooks";
 import { Spinner } from "./Spinner";
 import { Currency, Flight, Journey } from "./types";
 import { getJourneyId, getBookingLink } from "./utils";
 import Image from "next/image";
 
 type Props = {
-  journeyPriceMap: Map<string, number>;
   selectedCurrency: Currency;
   journey: Journey;
-  loadingPrices: Map<string, boolean>;
-  handleGetPrice: (
-    journey: Journey,
-    currency: Currency["label"]
-  ) => Promise<void>;
   className?: string;
 };
 
 export const JourneyItem = ({
   journey,
-  journeyPriceMap,
   selectedCurrency,
-  handleGetPrice,
-  loadingPrices,
   className,
 }: Props) => {
   const id = getJourneyId(journey);
-  const price = `${journeyPriceMap.get(id)?.toFixed(2)}${
-    selectedCurrency.symbol
-  }`;
-  const showPrice = Boolean(journeyPriceMap.get(id)) && !loadingPrices.get(id);
-  const showSpinner =
-    (journeyPriceMap.get(id) || loadingPrices.get(id)) && !showPrice;
-  const hideButton = loadingPrices.get(id) || Boolean(journeyPriceMap.get(id)); // button will only be clicked once, after that the only change may come from currency update
+
+  const [enabled, setEnabled] = useState(false);
+
+  const { data: priceData, isLoading: fetchingPrice } = usePrice(
+    journey,
+    id,
+    selectedCurrency,
+    enabled,
+  );
+  const hideButton = fetchingPrice || priceData?.price; // button will only be clicked once, after that the only change may come from currency update
+
+  const handleGetPrice = () => setEnabled(true);
 
   return (
     <li
@@ -78,15 +76,15 @@ export const JourneyItem = ({
         {!hideButton && (
           <button
             className="bg-sky-800 hover:bg-sky-900 text-white px-3 py-1 rounded-lg size-fit"
-            onClick={() => handleGetPrice(journey, selectedCurrency.label)}
+            onClick={handleGetPrice}
           >
             Get Price
           </button>
         )}
-        {showSpinner && <Spinner size={32} />}
-        {showPrice && (
+        {fetchingPrice && <Spinner size={32} />}
+        {priceData && (
           <p className="text-gray-800 font-semibold min-h-6 size-fit text-2xl">
-            {price}
+            {priceData.price.toFixed(2)} {selectedCurrency.symbol}
           </p>
         )}
       </div>
