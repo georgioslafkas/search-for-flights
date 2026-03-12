@@ -12,6 +12,7 @@ export function usePrice(
 
   return useSWR(
     key,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async ([_, id, currency]) => {
       const res = await fetch("/api/price", {
         method: "POST",
@@ -38,6 +39,7 @@ export function useJourneys(formData: FormData | null): SWRResponse<Journey[]> {
 
   return useSWR(
     key,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async ([_, formDataString]) => {
       const res = await fetch("/api/journeys", {
         method: "POST",

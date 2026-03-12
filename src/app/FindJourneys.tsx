@@ -73,7 +73,7 @@ export const FindJourneys = ({
       setJourneys(journeys);
       onJourneysFound(journeys);
     }
-  }, [journeys]);
+  }, [journeys, setJourneys, onJourneysFound]);
 
   return (
     <>

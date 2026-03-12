@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     );
 
     return NextResponse.json({ id, price: totalPrice });
-  } catch (err) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch price" },
       { status: 500 },

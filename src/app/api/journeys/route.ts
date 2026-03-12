@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
     const data = await res.json();
     return NextResponse.json(data);
-  } catch (err) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch journeys" },
       { status: 500 },
