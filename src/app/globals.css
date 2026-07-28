@@ -57,3 +57,57 @@ body {
   animation: fade-in-up 0.45s ease-out forwards;
 }
 
+/* React Select Styles */
+.react-select__control {
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  min-height: 42px;
+  font-size: 1rem;
+}
+
+.react-select__control:hover {
+  border-color: #d1d5db;
+}
+
+.react-select__control--is-focused {
+  border-color: #6b7280;
+  box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.1);
+}
+
+.react-select__menu {
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+  border: 1px solid #e5e7eb;
+}
+
+.react-select__option {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+}
+
+.react-select__option--is-focused {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.react-select__option--is-selected {
+  background-color: #fbbf24;
+  color: #ffffff;
+}
+
+.react-select__option--is-selected:hover {
+  background-color: #fcd34d;
+}
+
+.react-select__single-value {
+  color: #1f2937;
+}
+
+.react-select__placeholder {
+  color: #9ca3af;
+}
+
+.react-select__input-container {
+  color: #1f2937;
+}
