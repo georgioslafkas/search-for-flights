@@ -34,6 +34,16 @@ export const FindJourneys = ({
 
   const handleFindJourneySubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (formData.departureDateFrom && formData.departureDateTo) {
+      if (
+        new Date(formData.departureDateTo) <=
+        new Date(formData.departureDateFrom)
+      ) {
+        return;
+      }
+    }
+    
     if (
       submittedForm?.departureDateFrom === formData.departureDateFrom &&
       submittedForm?.departureDateTo === formData.departureDateTo &&
@@ -117,6 +127,7 @@ export const FindJourneys = ({
             name="departureDateTo"
             value={formData.departureDateTo}
             onChange={handleChange}
+            min={formData.departureDateFrom}
             required
             className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
           />
