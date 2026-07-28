@@ -4,6 +4,7 @@ import { Spinner } from "./Spinner";
 import { Notification } from "./Notification";
 import Image from "next/image";
 import { useJourneys } from "./hooks";
+import Select from "react-select";
 
 type Props = {
   setJourneys: Dispatch<SetStateAction<Journey[] | null>>;
@@ -124,24 +125,48 @@ export const FindJourneys = ({
             >
               Origin:
             </label>
-            <input
-              type="text"
-              id="origin"
-              name="origin"
-              value={formData.origin}
-              onChange={handleChange}
-              list="originAirports"
+            <Select
+              instanceId="origin"
+              inputId="origin"
+              options={airports.map((airport) => ({
+                value: airport.code,
+                label: `${airport.name} (${airport.code})`,
+              }))}
+              value={
+                formData.origin
+                  ? {
+                      value: formData.origin,
+                      label: `${airports.find((a) => a.code === formData.origin)?.name} (${formData.origin})`,
+                    }
+                  : null
+              }
+              onChange={(option) => {
+                if (option) {
+                  setFormData((prev) => ({ ...prev, origin: option.value }));
+                }
+              }}
               placeholder="Search airport or city..."
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+              isClearable
+              isSearchable
+              classNamePrefix="react-select"
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  borderColor: "#d1d5db",
+                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                  "&:hover": {
+                    borderColor: "#d1d5db",
+                  },
+                  "&:focus-within": {
+                    boxShadow: "0 0 0 2px rgba(107, 114, 128, 0.1)",
+                  },
+                }),
+                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+              }}
+              menuPortalTarget={
+                typeof document !== "undefined" ? document.body : undefined
+              }
             />
-            <datalist id="originAirports">
-              {(airports || []).map((airport) => (
-                <option key={airport.code} value={airport.code}>
-                  {airport.name} ({airport.code})
-                </option>
-              ))}
-            </datalist>
           </div>
 
           <button
@@ -164,26 +189,53 @@ export const FindJourneys = ({
             >
               Destination:
             </label>
-            <input
-              type="text"
-              id="destination"
-              name="destination"
-              value={formData.destination}
-              onChange={handleChange}
-              list="destinationAirports"
-              placeholder="Search airport or city..."
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-            />
-            <datalist id="destinationAirports">
-              {(airports || [])
+            <Select
+              instanceId="destination"
+              inputId="destination"
+              options={airports
                 .filter((airport) => airport.code !== formData.origin)
-                .map((airport) => (
-                  <option key={airport.code} value={airport.code}>
-                    {airport.name} ({airport.code})
-                  </option>
-                ))}
-            </datalist>
+                .map((airport) => ({
+                  value: airport.code,
+                  label: `${airport.name} (${airport.code})`,
+                }))}
+              value={
+                formData.destination
+                  ? {
+                      value: formData.destination,
+                      label: `${airports.find((a) => a.code === formData.destination)?.name} (${formData.destination})`,
+                    }
+                  : null
+              }
+              onChange={(option) => {
+                if (option) {
+                  setFormData((prev) => ({
+                    ...prev,
+                    destination: option.value,
+                  }));
+                }
+              }}
+              placeholder="Search airport or city..."
+              isClearable
+              isSearchable
+              classNamePrefix="react-select"
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  borderColor: "#d1d5db",
+                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                  "&:hover": {
+                    borderColor: "#d1d5db",
+                  },
+                  "&:focus-within": {
+                    boxShadow: "0 0 0 2px rgba(107, 114, 128, 0.1)",
+                  },
+                }),
+                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+              }}
+              menuPortalTarget={
+                typeof document !== "undefined" ? document.body : undefined
+              }
+            />
           </div>
         </div>
 
