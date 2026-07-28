@@ -124,23 +124,24 @@ export const FindJourneys = ({
             >
               Origin:
             </label>
-            <select
+            <input
+              type="text"
               id="origin"
               name="origin"
               value={formData.origin}
               onChange={handleChange}
+              list="originAirports"
+              placeholder="Search airport or city..."
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-            >
-              <option value="" disabled>
-                Select an origin
-              </option>
+            />
+            <datalist id="originAirports">
               {(airports || []).map((airport) => (
                 <option key={airport.code} value={airport.code}>
                   {airport.name} ({airport.code})
                 </option>
               ))}
-            </select>
+            </datalist>
           </div>
 
           <button
@@ -163,17 +164,18 @@ export const FindJourneys = ({
             >
               Destination:
             </label>
-            <select
+            <input
+              type="text"
               id="destination"
               name="destination"
               value={formData.destination}
               onChange={handleChange}
+              list="destinationAirports"
+              placeholder="Search airport or city..."
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-            >
-              <option value="" disabled>
-                Select a destination
-              </option>
+            />
+            <datalist id="destinationAirports">
               {(airports || [])
                 .filter((airport) => airport.code !== formData.origin)
                 .map((airport) => (
@@ -181,7 +183,7 @@ export const FindJourneys = ({
                     {airport.name} ({airport.code})
                   </option>
                 ))}
-            </select>
+            </datalist>
           </div>
         </div>
 
