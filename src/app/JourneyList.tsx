@@ -98,7 +98,7 @@ export const JourneyList = ({
         id="journey-list"
         className="space-y-4 mt-4"
       >
-        {sortedJourneys.map((journey, index) => (
+        {sortedJourneys.map((journey) => (
           <JourneyItem
             selectedCurrency={selectedCurrency}
             journey={journey}
